@@ -1,0 +1,457 @@
+#root {
+    height: 100% !important;
+    background-color: #e9e5e5 !important;
+}
+
+.background {
+    background-color: #e9e5e5 !important;
+}
+
+/* Header */
+
+.header-logo:hover {
+    background-color: white !important;
+}
+.menu.secondary .bell.icon {
+    margin: 0 !important;
+}
+.menu.secondary .ui.floating.label {
+    padding: .3em 8% !important;
+}
+
+.ui.menu.secondary {
+    padding: 0 5em !important;
+    margin: 0 !important;
+    box-shadow: 0 1px 2px 0 rgba(34,36,38,.15);
+}
+
+.menu.secondary .item {
+    font-size: 1.15em !important;
+    font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    padding: .2em 1em !important;
+}
+
+.menu.secondary .item:hover {
+    color: #2185d0 !important;
+    background-color: white !important;
+}
+
+.navbar-avatar {
+    width: 2.5em !important;
+    height: 2.5em !important;
+    border-radius: 50%;
+}
+
+.navbar-user-menu {
+    width: 12em !important;
+}
+
+.navbar-user-menu .item {
+    padding: 0.5em 10px !important;
+    font-size: 1.1em;
+    z-index: 100;
+}
+
+.navbar-user-menu-placeholder {
+    font-weight: 600 !important;
+    min-height: 30px;
+}
+
+.popup {
+    max-width: 500px !important;
+}
+
+.notification-list {
+    box-shadow: 0 1px 2px 0 rgba(34,36,38,.15);
+}
+
+.notification-list .item {
+    padding: 0.5em 10px !important;
+    border-bottom: 1px solid #ccc;
+}
+
+.notification-list .list-item:hover {
+    background-color: #dbe1e6;
+}
+
+.notification-placeholder {
+    height: 30px;
+    text-align: center;
+}
+/* Sidebar */
+
+/* Position and sizing of burger button */
+.bm-burger-button {
+    position: fixed;
+    width: 25px;
+    height: 25px;
+    left: 20px !important;
+    top: 20px !important;
+  }
+  
+/* Color/shape of burger icon bars */
+.bm-burger-bars {
+background: #373a47;
+}
+
+/* Color/shape of burger icon bars on hover*/
+.bm-burger-bars-hover {
+background: #a90000;
+}
+
+/* Position and sizing of clickable cross button */
+.bm-cross-button {
+height: 24px;
+width: 24px;
+}
+
+/* Color/shape of close button cross */
+.bm-cross {
+background: #bdc3c7;
+}
+
+/*
+Sidebar wrapper styles
+Note: Beware of modifying this element as it can break the animations - you should not need to touch it in most cases
+*/
+.bm-menu-wrap {
+position: absolute;
+height: 100%;
+}
+
+/* General sidebar styles */
+.bm-menu {
+background: white;
+border: 1px solid #ccc;
+padding: 2.5em 0 0;
+font-size: 1.15em;
+}
+
+/* Morph shape necessary with bubble or elastic */
+.bm-morph-shape {
+fill: #373a47;
+}
+
+/* Wrapper for item list */
+.bm-item-list {
+    color: #b8b7ad;
+}
+
+/* Individual item */
+.bm-item {
+    display: inline-block;
+    color: black;
+    padding: 0.3em 4em;
+}
+
+.bm-item i {
+    color: #2185d0;
+}
+
+.bm-item:hover {
+    background-color: #bbc3c9;
+    color: white;
+}
+
+/* Styling of overlay */
+.bm-overlay {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/*  */
+
+/* Login */
+
+.login-wrapper, .register-wrapper {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+textarea {
+    resize: none !important;
+}
+
+.login-card {
+    width: 24em !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.login-form-header {
+    background-color: white; 
+    padding: 0.6em 1em;
+    text-align: center !important
+}
+
+.login-form-logo {
+    width: 15em !important
+}
+
+.input-wrapper {
+    border: 1px solid #ccc
+}
+
+.input-icon {
+    height: 100%;
+    border-right: 1px solid #ccc;
+    padding: .67857143em 1em;
+    background-color: #f0eded;
+}
+
+.login-form-buttons {
+    width: 100%; 
+    font-weight: normal;
+    margin-top: 0 !important;
+}
+
+.field label {
+    color: black !important;
+}
+
+/* */
+
+/* Home */
+.ui.vertical.menu {
+    width: 100%;
+}
+
+.post-column {
+    padding-top: 0 !important;
+}
+
+.post-item {
+    background: #fff !important;
+    padding: 10px !important;
+    padding-top: 0 !important;
+    margin: 0 10px 15px 10px !important;
+    width: 100% !important;
+    border: none !important;
+    border-radius: .28571429rem !important;
+    -webkit-box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5 !important;
+    box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5 !important;
+    -webkit-transition: -webkit-box-shadow .1s ease,-webkit-transform .1s ease !important;
+    transition: -webkit-box-shadow .1s ease,-webkit-transform .1s ease !important;
+    transition: box-shadow .1s ease,transform .1s ease !important;
+    transition: box-shadow .1s ease,transform .1s ease,-webkit-box-shadow .1s ease,-webkit-transform .1s ease !important;
+}
+
+.post-item::after {
+    box-sizing: inherit !important;
+}
+
+.post-item .column {
+    padding: 0.5em !important;
+}
+
+.feed-container, .chat-container {
+    margin: 0 !important;
+    padding: 2em 5% !important;
+}
+
+.post-header {
+    margin: 0 0 0.5em 0 !important;
+}
+
+.post-header .post-user-name {
+    font-weight: 600 !important;
+    font-size: 1.2em;
+    color: rgba(0,0,0,.85);
+}
+
+.post-header .post-time {
+    margin: .5em 0 .5em;
+    font-size: 0.9em;
+    line-height: 1em;
+    color: rgba(0,0,0,.7) !important;
+}
+
+.post-header .avatar {
+    width: 100% !important;
+    height: auto !important;
+}
+
+.post-content {
+    white-space: pre-line;
+    margin: 0.5em 0.25em;
+    font-size: 1em;
+    line-height: 1.4285em;
+    color: rgba(0,0,0,.87);
+}
+
+.profile-container {
+    padding: 2em 5% !important;
+}
+
+.items {
+    margin: 0 !important;
+    padding: 0 15px !important;
+}
+
+.post-input-section {
+    width: 100%;
+    margin: 0 10px 15px 10px !important;
+}
+
+.ui.reply.form {
+    margin-top: 10px;
+}
+
+/* */
+
+/* Profile */
+
+.profile-avatar {
+    width: 200px !important;
+    height: 200px !important; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.profile-container .header {
+    font-family: Tahoma !important;
+}
+
+.profile-container .card {
+    width: 100%;
+}
+
+.profile-container .card .extra {
+    text-align: center;
+}
+
+.profile-container .card .extra button {
+    display: inherit !important;
+    margin-top: .4em !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.fileUploader.item {
+    box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
+}
+
+
+/* Chat */
+
+.chat-message-right {
+    text-align: right;
+}
+
+.chat-message-right .content {
+    display: inline-block !important;
+}
+
+
+.chat-message-left .description, .chat-message-right .description {
+    padding: .8em !important;
+    border-radius: .4em;
+    background-color :#d8dfe4;
+    margin-top: .2em;
+}
+
+.chat-message-right .description {
+    background-color :#2185d0;
+    color: white !important;
+}
+
+.item .header {
+    font-family: Verdana, Geneva, Tahoma, sans-serif !important;
+}
+
+.chat-wrapper {
+    height: 100% !important;
+    margin: 0 !important
+}
+
+.chat-wrapper .ui.menu.secondary {
+    width: 100% !important;
+}
+
+.chat-wrapper .ui.menu.secondary .item {
+    padding: .2em 1em !important;
+}
+
+.chat-container {
+    height: 90% !important;
+    background-color: #e9e5e5 !important;
+}
+
+.chat-column-2 {
+    background-color: white;
+    height: 100% !important;
+    box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
+}
+
+.chat-column-2 .avatar {
+    width: 3em !important;
+    height: 3em !important;
+    margin: 0 .5em !important;
+}
+
+.chat-column-2-header {
+    margin-left:-1rem;
+    margin-right: -1rem;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+}
+
+.chat-column-2-header h3 {
+    padding: .3em 1em;
+}
+
+.chat-message-section {
+    height: 80%;
+    overflow: auto;
+}
+
+.send-message-form {
+    position: absolute !important;
+    bottom: 0 !important;
+    width: 100% !important;
+}
+
+.send-message-form .column {
+    text-align: right;
+}
+
+.chat-column-1 {
+    height: 100% !important;
+    background-color: white;
+    box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
+}
+
+.chat-room-list {
+    padding: 0 !important;
+    margin: 0 -1em !important;
+}
+
+.chat-room-list-header {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+}
+
+.chat-container h3 {
+    font-family: Verdana, Geneva, Tahoma, sans-serif !important;
+}
+
+.chat-room-list-item {
+    padding: 1em !important;
+    box-shadow: 0 1px 2px 0 rgba(34,36,38,.15) !important;
+    margin: 0 !important;
+}
+
+.chat-room-list-item .header {
+    font-size: 1.1em !important;
+}
+
+.chat-room-list-item:hover {
+    background-color: rgb(212, 210, 210) !important;
+    cursor: pointer;
+}
+
+/*  */
