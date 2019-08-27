@@ -59,7 +59,7 @@ export default class ChatRoom extends Component {
     connectToSocket = () => {
         let uuid = this.props.match.params.uuid;
 
-        this.chatSocket = new WebSocket("ws://socialifenetwork.herokuapp.com/ws/chat/" + uuid + '/');
+        this.chatSocket = new WebSocket("wss://socialifenetwork.herokuapp.com/ws/chat/" + uuid + '/');
 
         this.chatSocket.onopen = (e) => {
             // chatSocket.send(JSON.stringify(msg));
