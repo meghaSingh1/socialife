@@ -4,7 +4,8 @@
   "private": true,
   "engines": {
     "npm": "6.9.0",
-    "node": "10.16.0"
+    "node": "10.16.0",
+    "yarn": "1.16.0"
   },
   "dependencies": {
     "axios": "^0.19.0",
@@ -37,5 +38,4 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8000"
 }
