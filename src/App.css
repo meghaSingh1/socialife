@@ -78,6 +78,16 @@
     height: 30px;
     text-align: center;
 }
+
+.ui.search>.results .result .image {
+    float: left !important;
+}
+.ui.search>.results .result .image+.content {
+    margin: 0 !important;
+}
+.results .title {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+}
 /* Sidebar */
 
 /* Position and sizing of burger button */
@@ -299,6 +309,11 @@ textarea {
     margin-top: 10px;
 }
 
+.carousel img {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
 /* */
 
 /* Profile */
@@ -448,6 +463,12 @@ textarea {
 .chat-room-list-item .header {
     font-size: 1.1em !important;
 }
+
+.chat-room-list-item .description {
+    text-overflow: ellipsis;
+    overflow: hidden; 
+}
+
 
 .chat-room-list-item:hover {
     background-color: rgb(212, 210, 210) !important;

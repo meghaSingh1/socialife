@@ -3,9 +3,8 @@ import axios from 'axios'
 import {Link} from 'react-router-dom'
 import logo from '../assets/images/logo.png'
 import { Popup } from 'semantic-ui-react'
-import ReactDOM from 'react-dom'
 
-
+var globalSocket = null;
 export default class Navbar extends Component {
     constructor(props) {
         super(props);
@@ -13,11 +12,15 @@ export default class Navbar extends Component {
             requestUserIsAnonymous: null,
             notifications: null,
             newNotifications: 0,
-            chatRooms: []
+            chatRooms: [],
+            displayResult: 'none',
+            searchResult: [],
+            searchResultHover: false
         }
+        this.timer = null;
     }
 
-    componentDidUpdate(prevProps) {
+    async componentDidUpdate(prevProps) {
         if (prevProps !== this.props && this.props.userData !== null) {
             const res = this.props.userData;
             if (res.status == 200) {
@@ -27,8 +30,10 @@ export default class Navbar extends Component {
                     if(!notification.is_read)
                         newNotifications += 1;
                 })
+                var unnoticedRoomUUID = []
                 res.data.chat_rooms.map(room => {
                     var is_noticed = false;
+                    
 
                     for (let i = 0; i < room.notice_by_users.length; i++) {
                         if(room.notice_by_users[i].email == res.data.user.email) {
@@ -36,11 +41,47 @@ export default class Navbar extends Component {
                             break; 
                         }
                     }
-                    if (!is_noticed) newMessages+= 1;
+                    if (!is_noticed) {newMessages+= 1;
+                    unnoticedRoomUUID.push(room.uuid); }
                 })
-                this.setState({requestUserIsAnonymous: false, user: res.data.user, notifications: res.data.notifications.slice(0, 7), newNotifications: newNotifications, newMessages: newMessages, chatRooms: res.data.chat_rooms})
+                await this.setState({requestUserIsAnonymous: false, user: res.data.user, unnoticedRoomUUID: unnoticedRoomUUID, notifications: res.data.notifications.slice(0, 7), newNotifications: newNotifications, newMessages: newMessages, chatRooms: res.data.chat_rooms})
+                if(globalSocket === null)
+                    await this.connectToGlobalSocket();
             }
             else this.setState({requestUserIsAnonymous: true});
+        }
+    }
+
+    connectToGlobalSocket = async () => {
+        globalSocket = new WebSocket('ws://127.0.0.1:8000/ws/global/');
+        globalSocket.onopen = (e) => {
+            var msg = {
+                type: "global_socket",
+                email: localStorage.getItem('email'),
+                token: localStorage.getItem('token'),
+            };
+            globalSocket.send(JSON.stringify(msg));
+        };
+        globalSocket.onmessage = (e) => {
+            console.log(e);
+            let msg = JSON.parse(e.data);
+            if(msg.type === 'new_message')
+            {
+                let uuid = msg.uuid;
+                if(!this.state.unnoticedRoomUUID.includes(uuid)) {
+                    this.setState({newMessages: this.state.newMessages+1, unnoticedRoomUUID: [...this.state.unnoticedRoomUUID,...[uuid]]})
+                }
+                if (this.props.getLastMessages !== undefined)
+                    this.props.getLastMessages(msg.last_messages);
+            }
+            else if(msg.type == 'new_notification') {
+                let newNotifications = this.state.notifications.slice();
+                if (newNotifications.length == 7) {
+                    newNotifications.pop();
+                    newNotifications.unshift(msg.notification) ; }
+                else newNotifications.unshift(msg.notification) ;
+                this.setState({newNotifications: this.state.newNotifications + 1, notifications: newNotifications});
+            }
         }
     }
 
@@ -69,12 +110,32 @@ export default class Navbar extends Component {
         else
             this.props.history.push('/chat/');
     }
+
+    searchAutocomplete = (e) => {
+        this.setState({searchQuery: e.target.value})
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+            axios.post('/api/search', {query: this.state.searchQuery, search_type:'profile_name', completion: true}).then(res => {
+                console.log(res.data);
+                this.setState({searchResult: res.data.result})
+                if(this.state.searchQuery == '')
+                    this.setState({displayResult: 'none'})
+                else
+                    this.setState({displayResult: res.data.result.length == 0 ? 'none' : 'block'})
+            }).catch(err => this.setState({searchResult: [], displayResult: 'none'}))
+        }, 1000);
+    }
+
+    searchBarFocusOut = () => {
+        if(!this.state.searchResultHover)
+            this.setState({displayResult: 'none'})
+    }
   
     render() {
         const notifications = this.state.notifications != null ? 
         this.state.notifications.map(notification => (
             <Link to={notification.url} role="listitem" className="item list-item">
-            <img src={'https://socialifenetwork.herokuapp.com' + notification.from_user.avatar} className="ui avatar image"/>
+            <img src={'http://127.0.0.1:8000' + notification.from_user.avatar} className="ui avatar image"/>
             <div className="content">
               <a className="header">{notification.from_user.first_name + ' ' + notification.from_user.last_name}</a>
               <div className="description">
@@ -83,6 +144,7 @@ export default class Navbar extends Component {
             </div>
           </Link>
         )) : '';
+
 
         return (
             this.state.requestUserIsAnonymous == null || this.state.requestUserIsAnonymous == true ?
@@ -98,9 +160,32 @@ export default class Navbar extends Component {
                 <div className="right menu">
                 <div className="item">
                     <div className="ui icon input">
-                    <input style={{width: '100%'}} type="text" placeholder="Search..." />
-                    <i aria-hidden="true" className="search icon"></i>
+                        <div className="ui search">
+                        <div className="ui icon input">
+                        <input value={this.state.searchQuery} className='prompt' onBlur={this.searchBarFocusOut} onChange={this.searchAutocomplete} style={{width: '100%'}} type="text" placeholder="Search..." />
+                            <i aria-hidden="true" className="search icon"></i>
+                        </div>
+                        <div onMouseOver={() => this.setState({searchResultHover: true})} 
+                        onMouseOut={() => this.setState({searchResultHover: false})} 
+                        style={{display: this.state.displayResult}} role="list" className="results">
+                            {this.state.searchResult.map(item => (
+                                <div onClick={() => {
+                                    this.setState({displayResult: 'none', searchQuery: ''});
+                                    this.props.history.push('/profile/' + item.profile_name);
+                                }} className="result">
+                                    <div className="image">
+                                        <img className='avatar' src={'http://127.0.0.1:8000' + item.avatar}/>
+                                    </div>
+                                    <div className="content">
+                                        <div className="title">{item.first_name + ' ' + item.last_name}</div>
+                                        <div className="description">{item.profile_name}</div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        </div>
                     </div>
+                    
                 </div>
                 <button style={{padding: '.1em'}} onClick={this.goToChat} className="ui button item">
                     <i aria-hidden="true" className="mail outline icon large"></i>
@@ -117,7 +202,7 @@ export default class Navbar extends Component {
                     </div>
                 </Popup>
                 <Popup on='click' style={{padding: '0px'}} position = 'bottom right'
-                trigger={<button className="ui button item"><img className="ui navbar-avatar image" src={"https://socialifenetwork.herokuapp.com" + this.state.user.avatar} /></button>}>
+                trigger={<button className="ui button item"><img className="ui navbar-avatar image" src={"http://127.0.0.1:8000" + this.state.user.avatar} /></button>}>
                     <div>
                         <div className="navbar-user-menu ui vertical menu">
                             <div className='item navbar-user-menu-placeholder'>Welcome, {localStorage.getItem('profile_name')}!</div>

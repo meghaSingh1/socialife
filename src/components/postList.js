@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
 import axios from 'axios'
 import {Link} from 'react-router-dom'
-
+import ImageUploader from 'react-images-upload'
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
+import { Dimmer } from 'semantic-ui-react'
 
 export default class PostList extends Component {
     constructor(props) {
@@ -9,6 +12,8 @@ export default class PostList extends Component {
       this.state = {
           posts: null,
           allowToPost: false,
+          pictures: [],
+          displayAddImagesSection: 'none',
       }
     }
 
@@ -19,6 +24,7 @@ export default class PostList extends Component {
     componentDidUpdate(prevProps) {
         if (prevProps !== this.props) {
             this.setState({posts: this.props.posts, allowToPost: this.props.allowToPost});
+            console.log(this.props.posts);
         }
     }
 
@@ -56,10 +62,26 @@ export default class PostList extends Component {
         axios.post('/api/create_new_post', {email: email, text_content: this.state.text_content}, {headers: 
         {'Content-Type': 'application/x-www-form-urlencoded',
          'Authorization': "Bearer " + token}})
-        .then(data => {
+        .then(res => {
             this.setState({text_content: ''})
-            if (data.status == 201) 
-                this.props.requestPosts();
+            if (res.status == 201) {
+                if(this.state.pictures.length > 0) {
+                    let formData = new FormData(); 
+
+                    for(let i = 0; i < this.state.pictures.length; i++)
+                        formData.append('file', this.state.pictures[i]);
+
+                    formData.append('email', email);
+                    formData.append('type', 'post');
+                    formData.append('uuid', res.data.post.uuid);
+                    axios.post('/api/upload_picture', formData, {headers: 
+                    {'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': "Bearer " + token}}).then(res => {
+                        this.setState({pictures: []});
+                        this.props.requestPosts();
+                    }).catch(err => console.log(err));
+                }
+            }
         }).catch(err => {
         })
     }
@@ -92,6 +114,26 @@ export default class PostList extends Component {
         }).catch(err => {})
 
         e.target.children[0].children[0].value = '';
+    }
+
+    onDrop = (pictureFiles) => {
+        this.setState({pictures: pictureFiles});
+    }
+
+    toogleDisplayAddImagesSection = async () => {
+        let display = this.state.displayAddImagesSection === 'none' ? 'block' : 'none';
+        await this.setState({displayAddImagesSection: display})
+        console.log(this.state.displayAddImagesSection);
+    }
+
+    openImageDimmer = (imageIndex, index) => {
+        let image = this.state.posts[index].images[imageIndex].image;
+        this.setState({dimmerActive: true, dimmerImage: image})
+        console.log('open')
+    }
+
+    closeImageDimmer = () => {
+        this.setState({dimmerActive: false})
     }
   
     render() {
@@ -134,7 +176,17 @@ export default class PostList extends Component {
                 </div>
                 <div className="post-content">
                     <p>{post.text_content.trim()}</p>
+                    <Carousel onClickItem={(imageIndex) => this.openImageDimmer(imageIndex, index)}>
+                    {post.images.length == 0 ? '' :
+                        post.images.map(image => (
+                        <div>
+                        <img src={'http://localhost:8000' + image.image} />
+                        
+                        </div>
+                        ))}
+                    </Carousel>
                 </div>
+
                 <div className="extra">
                     <i aria-hidden="true" onClick={(e) => this.handleLike(e, post.uuid)} className={likeButtonClass}></i>
                     <a className="ui label">{post.liked_by.length + (post.liked_by.length > 1 ? ' Likes' : ' Like')}</a>
@@ -193,7 +245,17 @@ export default class PostList extends Component {
                 </div>
                 <div className="post-content">
                     <p>{post.text_content.trim()}</p>
+                    <Carousel onClickItem={(imageIndex) => this.openImageDimmer(imageIndex, index)}>
+                    {post.images.length == 0 ? '' :
+                        post.images.map(image => (
+                        <div>
+                        <img src={'http://localhost:8000' + image.image} />
+                        
+                        </div>
+                        ))}
+                    </Carousel>
                 </div>
+
                 <div className="extra">
                     <i aria-hidden="true" onClick={(e) => this.handleLike(e, post.uuid)} className={likeButtonClass}></i>
                     <a className="ui label">{post.liked_by.length + (post.liked_by.length > 1 ? ' Likes' : ' Like')}</a>
@@ -224,7 +286,17 @@ export default class PostList extends Component {
                 <div className='field'>
                     <textarea value={this.state.text_content} required onChange={e => this.setState({text_content: e.target.value})} style={{resize: 'none'}} placeholder="Tell us more" rows="3"></textarea>
                 </div>
-                <input type='submit' className="button ui blue" value="Post" />
+                <div className="field">
+                    <input type='submit' className="button ui blue" value="Post" />
+                    <button onClick={this.toogleDisplayAddImagesSection} type='button' className="ui button"><i aria-hidden="true" class="images icon"></i> Add Images</button>
+                </div>
+                <div style={{display: this.state.displayAddImagesSection}} class='images-uploader-wrapper'><ImageUploader className='item'
+                            withIcon={true} singleImage={false} withLabel={false}
+                            buttonText='Choose images' label='Change your avatar'
+                            onChange={this.onDrop}
+                            imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                            maxFileSize={5242880} withPreview={true}
+                /></div>
             </form>
         </div></div>) : '';
 
@@ -245,6 +317,9 @@ export default class PostList extends Component {
         return (
             <div className="post-list">
                 {post_contents}
+                <Dimmer active={this.state.dimmerActive} onClickOutside={this.closeImageDimmer} page>
+                    <img style={{maxWidth: '50%'}} src={'http://localhost:8000' + this.state.dimmerImage} />
+                </Dimmer>
             </div>
         );
     }

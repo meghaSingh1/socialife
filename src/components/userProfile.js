@@ -110,7 +110,8 @@ export default class Login extends Component {
             let formData = new FormData(); 
             formData.append('file', pictureFiles[0]); 
             formData.append('email', email);
-            for (var pair of formData.entries()) { console.log(pair[0]+ ', ' + pair[1]); }
+            formData.append('type', 'avatar')
+
             axios.post('/api/upload_picture', formData, {headers: 
             {'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': "Bearer " + token}}).then(res => {
@@ -131,7 +132,7 @@ export default class Login extends Component {
 
         const followers = this.state.user == null ? '' : this.state.user.followers == undefined ? '' : this.state.user.followers.length + (this.state.user.followers.length > 1 ? ' Followers' : ' Follower');
         const user_name = this.state.user == null ? '' : (this.state.user.first_name + ' ' + this.state.user.last_name);
-        const avatar = this.state.user == null ? '' : "https://socialifenetwork.herokuapp.com" + this.state.user.avatar;
+        const avatar = this.state.user == null ? '' : "http://127.0.0.1:8000" + this.state.user.avatar;
 
         return (
             <div className='background'>

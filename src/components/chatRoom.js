@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios'
-import {Link} from 'react-router-dom'
 import Navbar from './navbar'
-import PostList from './postList'
-import Navbat from './navbar'
+
 
 export default class ChatRoom extends Component {
     static chatSocket = null;
@@ -17,50 +15,52 @@ export default class ChatRoom extends Component {
         messages: null,
         connectionEstablished: false,
         userData: null,
-        RoomsWithMessage: null
+        lastMessages: null
       }
     }
 
-    fetchData = () => {
+    fetchData = async () => {
         const email = localStorage.getItem('email');
         const token = localStorage.getItem('token');
-        axios.post('/api/check_logged_in', {email: email, chat_room: true}, {headers: 
+        await axios.post('/api/check_logged_in', {email: email, chat_room: true}, {headers: 
         {'Content-Type': 'application/x-www-form-urlencoded',
          'Authorization': "Bearer " + token}})
-         .then(res => {
+         .then(async (res) => {
             console.log(res);
             if (res.status !== 200) {
                 console.log(res);
                 localStorage.clear()
                 this.props.history.push('/login'); }
-            else this.setState({user: res.data.user, userData: res,})
-
-            //Find all rooms with newest messages
-            let availRoomUUID = [];
-            let messages = [];
-            for(let i = 0; i < res.data.messages.length; i++) {
-                if(!availRoomUUID.includes(res.data.messages[i].chat_room.uuid)) {
-                    messages.push(res.data.messages[i]);
-                    availRoomUUID.push(res.data.messages[i].chat_room.uuid)
-                }
-            }
-            for (let i = 0; i < messages.length; i++) {
-                for(let j = 0; j < messages[i].chat_room.users.length; j++) {
-                    if(messages[i].chat_room.users[j].profile_name != localStorage.getItem('profile_name')) {
-                        messages[i].otherEndUser = messages[i].chat_room.users[j];
-                        break; }
-                }
-            }
-            this.setState({roomsWithMessage: messages});
-
+            else await this.setState({user: res.data.user, userData: res,})
+            this.getLastMessages(res.data.messages);
         }).catch(err => {localStorage.clear(); this.props.history.push('/login');})
     }
 
-    connectToSocket = () => {
+    getLastMessages = (msg) => {
+        //Find all rooms with newest messages
+        let availRoomUUID = [];
+        let messages = [];
+        for(let i = 0; i < msg.length; i++) {
+            if(!availRoomUUID.includes(msg[i].chat_room.uuid)) {
+                messages.push(msg[i]);
+                availRoomUUID.push(msg[i].chat_room.uuid)
+            }
+        }
+        for (let i = 0; i < messages.length; i++) {
+            for(let j = 0; j < messages[i].chat_room.users.length; j++) {
+                if(messages[i].chat_room.users[j].profile_name != localStorage.getItem('profile_name')) {
+                    messages[i].otherEndUser = messages[i].chat_room.users[j];
+                    break; }
+            }
+        }
+        this.setState({lastMessages: messages});
+    }
+
+    connectToSocket = async () => {
         let uuid = this.props.match.params.uuid;
 
-        this.chatSocket = new WebSocket("wss://socialifenetwork.herokuapp.com/ws/chat/" + uuid + '/');
-
+        // this.chatSocket = new WebSocket("wss://socialifenetwork.herokuapp.com/ws/chat/" + uuid + '/');
+        this.chatSocket = new WebSocket("ws://127.0.0.1:8000/ws/chat/" + uuid + '/');
         this.chatSocket.onopen = (e) => {
             // chatSocket.send(JSON.stringify(msg));
             this.setState({connectionEstablished: true})
@@ -73,24 +73,22 @@ export default class ChatRoom extends Component {
             this.chatSocket.send(JSON.stringify(msg));
         };
 
-        this.chatSocket.onmessage = (e) => {
+        this.chatSocket.onmessage = async (e) => {
+            console.log(e);
             let msg = JSON.parse(e.data);
             if (msg.message != undefined)
             {
-                console.log(msg)
+                console.log(msg.uuid);
+                console.log(this.props.match.params.uuid);
                 if (msg.type == 'chat_message' && msg.uuid === this.props.match.params.uuid) {
                     let newMessages = this.state.messages == null ? [] : this.state.messages.slice();
+                    this.getLastMessages(msg.last_messages);
                     newMessages.push(msg.message);
                     this.setState({
                         messages: newMessages
                     });
-                    this.fetchData();}
-                    
-
-                else if (msg.type == 'chat_message' && msg.uuid !== this.props.match.params.uuid ) {
-                    this.fetchData();
                 }
-
+                    
                 else if (msg.type == 'fetch_messages')
                     this.setState({
                         messages: msg.message
@@ -110,7 +108,7 @@ export default class ChatRoom extends Component {
         this.fetchData();
         this.connectToSocket(); }
         else
-            this.setState({messages: [], roomsWithMessage: [], connectionEstablished: true})
+            this.setState({messages: [], lastMessages: [], connectionEstablished: true})
     }
 
     async componentDidUpdate(prevProps) {
@@ -150,18 +148,18 @@ export default class ChatRoom extends Component {
             if(msg.user.email == this.state.user.email)
                 return (<div role="listitem" className="item chat-message-right">
                 <div className="content">
-                <a className="header">{msg.user.first_name + ' ' + msg.user.last_name}</a>
+                <a href={'/profile/' + msg.user.profile_name} className="header">{msg.user.first_name + ' ' + msg.user.last_name}</a>
                 <div className="description">
                     {msg.content}
                 </div>
                 </div>
-                <img src={"https://socialifenetwork.herokuapp.com" + msg.user.avatar} className="ui avatar image"/>
+                <img src={"http://127.0.0.1:8000" + msg.user.avatar} className="ui avatar image"/>
             </div>)
             else
             return (<div role="listitem" className="item chat-message-left">
-                <img src={"https://socialifenetwork.herokuapp.com" + msg.user.avatar} className="ui avatar image"/>
+                <img src={"http://127.0.0.1:8000" + msg.user.avatar} className="ui avatar image"/>
                 <div className="content">
-                <a className="header">{msg.user.first_name + ' ' + msg.user.last_name}</a>
+                <a href={'/profile/' + msg.user.profile_name} className="header">{msg.user.first_name + ' ' + msg.user.last_name}</a>
                 <div className="description">
                     {msg.content}
                 </div>
@@ -169,16 +167,16 @@ export default class ChatRoom extends Component {
             </div>)
         });
         
-        const roomsWithMessage = this.state.roomsWithMessage == null ? <div style={{marginTop: '.5em'}} className="ui active centered inline loader"></div> :
-        this.state.roomsWithMessage.length == 0 ? <div style={{marginTop: '.5em'}}></div> :
-        this.state.roomsWithMessage.map(room => (
-            <div onClick={() => this.goToRoom(room.chat_room.uuid)} class="item chat-room-list-item">
-            <div class="ui tiny image">
-                <img src={'https://socialifenetwork.herokuapp.com' + room.otherEndUser.avatar} />
+        const lastMessages = this.state.lastMessages == null ? <div style={{marginTop: '.5em'}} className="ui active centered inline loader"></div> :
+        this.state.lastMessages.length == 0 ? <div style={{marginTop: '.5em'}}></div> :
+        this.state.lastMessages.map(room => (
+            <div onClick={() => this.goToRoom(room.chat_room.uuid)} className="item chat-room-list-item">
+            <div className="ui tiny image">
+                <img src={'http://127.0.0.1:8000' + room.otherEndUser.avatar} />
             </div>
-            <div class="content">
-                <a class="header">{room.otherEndUser.first_name + ' ' + room.otherEndUser.last_name}</a>
-                <div class="description">
+            <div className="content">
+                <a className="header">{room.otherEndUser.first_name + ' ' + room.otherEndUser.last_name}</a>
+                <div className="description">
                 <p>{room.content}</p>
                 </div>
             </div>
@@ -189,8 +187,8 @@ export default class ChatRoom extends Component {
             <div className='chat-container row ui grid'>
                 <div className='four wide column chat-column-1'>
                 <div className='chat-column-2-header row'><h3>Your Conversations</h3></div>
-                <div class="ui items chat-room-list">
-                    {roomsWithMessage}
+                <div className="ui items chat-room-list">
+                    {lastMessages}
                 </div>
                 </div>
                 <div className='one wide column'></div>
@@ -198,8 +196,8 @@ export default class ChatRoom extends Component {
                 {this.state.messages == null ? <div className='eleven wide column chat-column-2 grid'><div className="ui active centered inline loader"></div></div> :
                 this.state.messages.length && this.props.match.params.uuid == 0 ? 
                 <div className='eleven wide column chat-column-2 grid'>
-                    <div class="ui warning message">
-                        <div class="header">You don't have any conversations!</div>
+                    <div className="ui warning message">
+                        <div className="header">You don't have any conversations!</div>
                         <p>Start making some friends!</p>
                     </div>
                 </div> :
@@ -213,7 +211,7 @@ export default class ChatRoom extends Component {
                             <div className="field fourteen wide column">
                                 <input className='ui input' value={this.state.message} onChange={e => this.setState({message: e.target.value})}/>
                             </div>
-                            <div className="field two wide column"><button className="ui icon button"><i aria-hidden="true" class="send icon"></i></button></div>
+                            <div className="field two wide column"><button className="ui icon button"><i aria-hidden="true" className="send icon"></i></button></div>
                     </form></div>
                 </div>}
             </div>
@@ -221,7 +219,7 @@ export default class ChatRoom extends Component {
 
         return (
             <div className='chat-wrapper'>
-                <Navbar userData={this.state.userData} history={this.props.history}/>
+                <Navbar getLastMessages={this.getLastMessages} userData={this.state.userData} history={this.props.history}/>
                 {body}
             </div>
         )

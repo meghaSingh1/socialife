@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import axios from 'axios'
-import {Link} from 'react-router-dom'
 import logo from '../assets/images/logo.png';
 
 export default class Login extends Component {
@@ -41,7 +40,10 @@ export default class Login extends Component {
         }
         else
           this.setState({error: true})
-      }).catch(err => this.setState({error: true}))
+        console.log(res);
+      }).catch(err => {
+          this.setState({error: true})
+          console.log(err);})
     }
   
     render() {

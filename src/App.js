@@ -6,9 +6,11 @@ import Signup from './components/signup'
 import Home from './components/home'
 import UserProfile from './components/userProfile'
 import ChatRoom from './components/chatRoom'
+import Search from './components/Search'
+
 import axios from 'axios'
 
-axios.defaults.baseURL = 'https://socialifenetwork.herokuapp.com';
+axios.defaults.baseURL = 'http://127.0.0.1:8000';
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
         <Route path="/" exact component={Home} />
         <Route path="/profile/:profileName" component={UserProfile} />
         <Route path="/chat/:uuid?" component={ChatRoom} />
+        <Route path="/search/query=:query/type=:type" component={Search} />
     </Router>
   );
 }
