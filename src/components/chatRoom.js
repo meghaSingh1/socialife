@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios'
 import Navbar from './navbar'
-
+import { Popup } from 'semantic-ui-react'
 
 export default class ChatRoom extends Component {
     static chatSocket = null;
@@ -148,21 +148,22 @@ export default class ChatRoom extends Component {
             if(msg.user.email == this.state.user.email)
                 return (<div role="listitem" className="item chat-message-right">
                 <div className="content">
-                <a href={'/profile/' + msg.user.profile_name} className="header">{msg.user.first_name + ' ' + msg.user.last_name}</a>
                 <div className="description">
                     {msg.content}
                 </div>
                 </div>
-                <img src={"http://127.0.0.1:8000" + msg.user.avatar} className="ui avatar image"/>
+                <Popup content={msg.user.first_name + ' ' + msg.user.last_name} position='top right'
+                trigger={<img onClick={() => this.props.history.push('/profile/' + msg.user.profile_name)} src={"http://127.0.0.1:8000" + msg.user.avatar} className="ui avatar image"/>} />     
             </div>)
             else
             return (<div role="listitem" className="item chat-message-left">
-                <img src={"http://127.0.0.1:8000" + msg.user.avatar} className="ui avatar image"/>
+                <Popup content={msg.user.first_name + ' ' + msg.user.last_name} position='top left'
+                trigger={<img onClick={() => this.props.history.push('/profile/' + msg.user.profile_name)} src={"http://127.0.0.1:8000" + msg.user.avatar} className="ui avatar image"/>} />     
                 <div className="content">
-                <a href={'/profile/' + msg.user.profile_name} className="header">{msg.user.first_name + ' ' + msg.user.last_name}</a>
                 <div className="description">
                     {msg.content}
                 </div>
+
                 </div>
             </div>)
         });
@@ -193,9 +194,12 @@ export default class ChatRoom extends Component {
                 </div>
                 <div className='one wide column'></div>
 
-                {this.state.messages == null ? <div className='eleven wide column chat-column-2 grid'><div className="ui active centered inline loader"></div></div> :
+                {this.state.messages == null ? <div className='eleven wide column chat-column-2 grid'>
+                    <div className='chat-column-2-header row'><h3>Messages</h3></div>
+                    <div style={{marginTop: '.5em'}} className="ui active centered inline loader"></div></div> :
                 this.state.messages.length && this.props.match.params.uuid == 0 ? 
                 <div className='eleven wide column chat-column-2 grid'>
+                    <div className='chat-column-2-header row'><h3>Messages</h3></div>
                     <div className="ui warning message">
                         <div className="header">You don't have any conversations!</div>
                         <p>Start making some friends!</p>
@@ -204,7 +208,6 @@ export default class ChatRoom extends Component {
                 <div className='eleven wide column chat-column-2'>
                     <div className='chat-column-2-header row'><h3>Messages</h3></div>
                     <div role="list" id='chat-message-section' className="ui very relaxed list chat-message-section row">
-                        
                         {messageList}
                     </div>
                     <div className='send-message-form-wrapper row'><form className='ui form grid send-message-form' onSubmit={this.sendChatMessage}>

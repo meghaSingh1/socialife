@@ -12,26 +12,28 @@
 .header-logo:hover {
     background-color: white !important;
 }
-.menu.secondary .bell.icon {
+.menu.secondary.main-menu .item {
+    font-size: 1.15em !important;
+    font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    padding: .1em 1em !important;
+}
+
+.menu.secondary.main-menu .bell.icon {
     margin: 0 !important;
 }
-.menu.secondary .ui.floating.label {
+.menu.secondary.main-menu .ui.floating.label {
     padding: .3em 8% !important;
 }
 
-.ui.menu.secondary {
+.ui.menu.secondary.main-menu {
     padding: 0 5em !important;
     margin: 0 !important;
     box-shadow: 0 1px 2px 0 rgba(34,36,38,.15);
+    width: 100% !important;
 }
 
-.menu.secondary .item {
-    font-size: 1.15em !important;
-    font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    padding: .2em 1em !important;
-}
 
-.menu.secondary .item:hover {
+.menu.secondary.main-menu .item:hover {
     color: #2185d0 !important;
     background-color: white !important;
 }
@@ -88,87 +90,7 @@
 .results .title {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
 }
-/* Sidebar */
 
-/* Position and sizing of burger button */
-.bm-burger-button {
-    position: fixed;
-    width: 25px;
-    height: 25px;
-    left: 20px !important;
-    top: 20px !important;
-  }
-  
-/* Color/shape of burger icon bars */
-.bm-burger-bars {
-background: #373a47;
-}
-
-/* Color/shape of burger icon bars on hover*/
-.bm-burger-bars-hover {
-background: #a90000;
-}
-
-/* Position and sizing of clickable cross button */
-.bm-cross-button {
-height: 24px;
-width: 24px;
-}
-
-/* Color/shape of close button cross */
-.bm-cross {
-background: #bdc3c7;
-}
-
-/*
-Sidebar wrapper styles
-Note: Beware of modifying this element as it can break the animations - you should not need to touch it in most cases
-*/
-.bm-menu-wrap {
-position: absolute;
-height: 100%;
-}
-
-/* General sidebar styles */
-.bm-menu {
-background: white;
-border: 1px solid #ccc;
-padding: 2.5em 0 0;
-font-size: 1.15em;
-}
-
-/* Morph shape necessary with bubble or elastic */
-.bm-morph-shape {
-fill: #373a47;
-}
-
-/* Wrapper for item list */
-.bm-item-list {
-    color: #b8b7ad;
-}
-
-/* Individual item */
-.bm-item {
-    display: inline-block;
-    color: black;
-    padding: 0.3em 4em;
-}
-
-.bm-item i {
-    color: #2185d0;
-}
-
-.bm-item:hover {
-    background-color: #bbc3c9;
-    color: white;
-}
-
-/* Styling of overlay */
-.bm-overlay {
-    background: rgba(0, 0, 0, 0.3);
-}
-
-/*  */
 
 /* Login */
 
@@ -234,6 +156,7 @@ textarea {
 
 .post-item {
     background: #fff !important;
+    position: relative;
     padding: 10px !important;
     padding-top: 0 !important;
     margin: 0 10px 15px 10px !important;
@@ -254,6 +177,39 @@ textarea {
 
 .post-item .column {
     padding: 0.5em !important;
+}
+
+.post-item .post-option {
+    position: absolute;
+    top: .2em;
+    right: 0;
+    font-size: 1.2em;
+    cursor: pointer;
+    z-index: 100 !important;
+
+}
+.post-item .post-option-icon {
+    position: absolute;
+    right: 0;
+}
+
+.post-item .dropdown-options {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    min-width: 250px !important;
+    background-color: white;
+    border: 1px solid #ccc !important;
+    padding: 0;
+    border-radius: .28571429rem !important;
+}
+
+.post-item .dropdown-options .item {
+    padding: .5em !important;
+}
+
+.post-item .dropdown-options .item:hover {
+    background-color: rgb(241, 240, 240);
 }
 
 .feed-container, .chat-container {
@@ -314,6 +270,90 @@ textarea {
     cursor: pointer !important;
 }
 
+.dimmer .carousel .slider-wrapper {
+    max-width: 80% !important;
+}
+
+.dimmer .carousel .slider img {
+    max-width: 60% !important;
+}
+
+.dimmer-close-button {
+    font-size: 1.8em !important;
+    position: fixed;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}
+
+/* Sidebar */
+.custom-sidebar {
+    background-color: #e9e5e5 !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+.custom-sidebar .link-item {
+    font-size: 1.1em !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+}
+
+.custom-sidebar .link-item:hover {
+    color: #2185d0 !important;
+}
+
+.custom-sidebar .link-item.active {
+    color: #2185d0 !important;
+    background-color: rgb(246, 242, 242) !important;
+}
+
+.custom-sidebar .item .icon {
+    margin-right: 1em !important;
+    margin-left: 0 !important;
+}
+
+.custom-sidebar .item .people-i-followed-header {
+    font-size: 1.1em !important;
+    font-weight: 600 !important;
+    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif !important;
+}
+
+.custom-sidebar .item {
+    margin: 0 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+}
+
+.item .header {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+}
+
+.custom-sidebar .unfollow-buttton {
+    float: right !important;
+    padding: .5em !important;
+    display: none;
+}
+
+.custom-sidebar .blue-border-button {
+    border: 1.5px solid#2185d0;
+    color: #2185d0;
+    background-color: white !important;
+    border-radius: 0 !important;
+    width: 100% !important;
+    margin: .5em 0 0 0 !important;
+}
+
+.custom-sidebar .blue-border-button:hover {
+    background-color: #2185d0 !important;
+    color: white;
+}
+
+
+.see-all {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+
 /* */
 
 /* Profile */
@@ -364,7 +404,10 @@ textarea {
     padding: .8em !important;
     border-radius: .4em;
     background-color :#d8dfe4;
-    margin-top: .2em;
+}
+
+.chat-message-left .avatar, .chat-message-right .avatar {
+    cursor: pointer;
 }
 
 .chat-message-right .description {
@@ -381,11 +424,11 @@ textarea {
     margin: 0 !important
 }
 
-.chat-wrapper .ui.menu.secondary {
+.chat-wrapper .ui.menu.secondary.main-menu {
     width: 100% !important;
 }
 
-.chat-wrapper .ui.menu.secondary .item {
+.chat-wrapper .ui.menu.secondary.main-menu .item {
     padding: .2em 1em !important;
 }
 
@@ -430,6 +473,20 @@ textarea {
 
 .send-message-form .column {
     text-align: right;
+}
+
+.ui.form .fourteen.wide.field {
+    width: 90% !important;
+}
+
+.ui.form .two.wide.field {
+    width: 10% !important;
+}
+
+.send-message-form .button {
+    width: 100%;
+    background-color :#2185d0 !important;
+    color: white !important;
 }
 
 .chat-column-1 {

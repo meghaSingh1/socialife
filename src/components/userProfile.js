@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import Navbar from './navbar'
 import PostList from './postList'
 import ImageUploader from 'react-images-upload'
+import SideBar from './sidebar'
 
 export default class Login extends Component {
     constructor(props) {
@@ -40,7 +41,17 @@ export default class Login extends Component {
          'Authorization': "Bearer " + token}})
          .then(res => {
             if (res.status === 200)
+            {
+                let isFollowing = false;
+                for (let i = 0; i < res.data.followings.length; i++){
+                    if(res.data.followings[i].profile_name === this.props.match.params.profileName) {
+                        isFollowing = true;
+                        break;
+                    }
+                }
+                this.setState({isFollowing: isFollowing});
                 this.setState({requestUserIsAnonymous: false, user: res.data.user, userData: res})
+            }
             else
                 this.setState({requestUserIsAnonymous: true})
         }).catch(err => {})
@@ -55,7 +66,7 @@ export default class Login extends Component {
             console.log(res);
             if (res.status === 200) {
                 console.log(res.data)
-                this.setState({user_posts: res.data.user_posts, user: res.data.user, isFollowing: res.data.is_in_your_following})
+                this.setState({user_posts: res.data.user_posts, user: res.data.user})
                 if(!this.state.requestUserIsAnonymous && email == res.data.user.email)
                     this.setState({allowToPost: true})
                 if(!this.state.allowToPost && !this.state.requestUserIsAnonymous)
@@ -139,6 +150,12 @@ export default class Login extends Component {
                 <Navbar userData={this.state.userData} history={this.props.history}/>
                 <div className='profile-container'>
                 <div className="ui grid">
+                    <div className='four wide column'>
+                        <SideBar userData={this.state.userData} activeClass="profile-item" />
+                    </div>
+                    <div className="eight wide column">
+                        <PostList posts={this.state.user_posts} allowToPost={this.state.allowToPost} user={this.state.user} requestPosts={this.requestPosts} />
+                    </div>
                     <div className="four wide column">
                     <div className="ui card">
                     <div className="image avatar">
@@ -184,9 +201,6 @@ export default class Login extends Component {
                             imgExtension={['.jpg', '.gif', '.png', '.gif']}
                             maxFileSize={5242880} withPreview={true}
                     />}
-                    </div>
-                    <div className="twelve wide column">
-                        <PostList posts={this.state.user_posts} allowToPost={this.state.allowToPost} user={this.state.user} requestPosts={this.requestPosts} />
                     </div>
                     </div>
                 </div>

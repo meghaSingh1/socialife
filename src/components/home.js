@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import axios from 'axios'
-import {Link} from 'react-router-dom'
 import Navbar from './navbar'
 import PostList from './postList'
+import SideBar from './sidebar'
 
 
 export default class Login extends Component {
@@ -23,7 +23,7 @@ export default class Login extends Component {
         {'Content-Type': 'application/x-www-form-urlencoded',
          'Authorization': "Bearer " + token}})
          .then(res => {
-            if (res.status != 200) {
+            if (res.status !== 200) {
                 localStorage.clear();
                 this.props.history.push('/login');
             }
@@ -56,20 +56,9 @@ export default class Login extends Component {
                 <div className='feed-container'>
                     <div className='ui grid'>
                     <div className='four wide column feed-column'>
-                        <div className="ui vertical menu">
-
-                        <a className="item"><i style={{float: 'right'}} aria-hidden="true" className="info icon large"></i>About</a>
-                        <a className="item">
-                            <i style={{float: 'right'}} aria-hidden="true" className="setting icon large"></i>Setting
-                        </a>
-                        <div className="item">
-                            <div className="ui icon input">
-                            <input type="text" placeholder="Search mail..." />
-                            <i aria-hidden="true" className="search icon"></i>
-                            </div>
-                        </div>
-                    </div></div>
-                    <div className='twelve wide column feed-column'>
+                        <SideBar userData={this.state.userData} activeClass="home-item" />
+                    </div>
+                    <div className='eight wide column feed-column'>
                         <div>
                             <PostList posts={this.state.user_posts} isHomePage={true} allowToPost={true} requestPosts={this.requestPosts} />
                         </div>

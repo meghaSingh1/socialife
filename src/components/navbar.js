@@ -5,6 +5,14 @@ import logo from '../assets/images/logo.png'
 import { Popup } from 'semantic-ui-react'
 
 var globalSocket = null;
+function getOffset(el) {
+    const rect = el.getBoundingClientRect();
+    return {
+        left: rect.left + window.scrollX,
+        top: rect.top + window.scrollY
+    };
+}
+
 export default class Navbar extends Component {
     constructor(props) {
         super(props);
@@ -15,13 +23,40 @@ export default class Navbar extends Component {
             chatRooms: [],
             displayResult: 'none',
             searchResult: [],
-            searchResultHover: false
+            searchResultHover: false,
+            menuPosition: 'static',
         }
         this.timer = null;
     }
 
+    componentWillUnmount() {
+        window.onscroll = null;
+    }
+
     async componentDidUpdate(prevProps) {
         if (prevProps !== this.props && this.props.userData !== null) {
+            let _this = this;
+            let sidebar = document.getElementById("sidebar");
+            let mainMenu = document.getElementById("main-menu");
+            if (sidebar != null) {
+                    let left = getOffset(sidebar).left;
+                    let width = sidebar.clientWidth;
+                    let menuHeight = this.divElement.clientHeight;
+
+                window.onscroll = function() {
+                    if(window.pageYOffset <= mainMenu.clientHeight + 10) {
+                        _this.setState({menuPosition: 'static'})
+                        sidebar.style.position = 'static';
+                    }
+                    else {
+                        _this.setState({menuPosition: 'fixed'})
+                        sidebar.style.top = menuHeight + 32 + 'px';
+                        sidebar.style.width = width + 'px';
+                        sidebar.style.position = 'fixed';
+                    }
+                };
+            }
+
             const res = this.props.userData;
             if (res.status == 200) {
                 let newNotifications = 0;
@@ -83,6 +118,9 @@ export default class Navbar extends Component {
                 this.setState({newNotifications: this.state.newNotifications + 1, notifications: newNotifications});
             }
         }
+        globalSocket.onclose = (e) => {
+            this.connectToGlobalSocket();
+        }
     }
 
     handleLogout = () => {
@@ -130,6 +168,10 @@ export default class Navbar extends Component {
         if(!this.state.searchResultHover)
             this.setState({displayResult: 'none'})
     }
+
+    menuIsVisible = (isVisible) => {
+        this.setState({menuPosition: isVisible ? 'static' : 'fixed'})
+    }
   
     render() {
         const notifications = this.state.notifications != null ? 
@@ -148,14 +190,16 @@ export default class Navbar extends Component {
 
         return (
             this.state.requestUserIsAnonymous == null || this.state.requestUserIsAnonymous == true ?
-            (<div style={{backgroundColor: 'white', padding: '5px 5px'}} className="ui secondary menu">
+            (<div ref={ (divElement) => this.divElement = divElement} id='main-menu' style={{backgroundColor: 'white', padding: '5px 5px'}} className="ui secondary menu main-menu">
             <a href='/' style={{padding: '0px 5px'}} className="header item header-logo"><img style={{width: '140px'}} src={logo} alt="Logo" /></a>
             <div className="right menu">
             <button style={{padding: '.1em'}} className="ui button item"><Link to='/login'><i aria-hidden="true" className="sign-in icon large"></i>Sign In</Link></button>
             </div>
             </div>) :
 
-            (<div style={{backgroundColor: 'white', padding: '5px 5px'}} className="ui secondary menu">
+            (<div id="main-menu"  ref={ (divElement) => this.divElement = divElement}
+            style={{backgroundColor: 'white', padding: '5px 5px', zIndex: '50', position: this.state.menuPosition, paddingBottom: this.state.menuPaddingBottom}} 
+            className="ui secondary menu main-menu">
                 <a href='/' style={{padding: '0px 5px'}} className="header item header-logo"><img style={{width: '140px'}} src={logo} alt="Logo" /></a>
                 <div className="right menu">
                 <div className="item">
