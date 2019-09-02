@@ -20,7 +20,6 @@ function App() {
         <Route path="/" exact component={Home} />
         <Route path="/profile/:profileName" component={UserProfile} />
         <Route path="/chat/:uuid?" component={ChatRoom} />
-        <Route path="/search/query=:query/type=:type" component={Search} />
     </Router>
   );
 }

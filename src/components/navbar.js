@@ -177,7 +177,7 @@ export default class Navbar extends Component {
         const notifications = this.state.notifications != null ? 
         this.state.notifications.map(notification => (
             <Link to={notification.url} role="listitem" className="item list-item">
-            <img src={'http://127.0.0.1:8000' + notification.from_user.avatar} className="ui avatar image"/>
+            <img src={'http://127.0.0.1:8000' + notification.from_user.avatar[0].image} className="ui avatar image"/>
             <div className="content">
               <a className="header">{notification.from_user.first_name + ' ' + notification.from_user.last_name}</a>
               <div className="description">
@@ -218,7 +218,7 @@ export default class Navbar extends Component {
                                     this.props.history.push('/profile/' + item.profile_name);
                                 }} className="result">
                                     <div className="image">
-                                        <img className='avatar' src={'http://127.0.0.1:8000' + item.avatar}/>
+                                        <img className='avatar' src={'http://127.0.0.1:8000' + item.avatar[0].image}/>
                                     </div>
                                     <div className="content">
                                         <div className="title">{item.first_name + ' ' + item.last_name}</div>
@@ -246,7 +246,7 @@ export default class Navbar extends Component {
                     </div>
                 </Popup>
                 <Popup on='click' style={{padding: '0px'}} position = 'bottom right'
-                trigger={<button className="ui button item"><img className="ui navbar-avatar image" src={"http://127.0.0.1:8000" + this.state.user.avatar} /></button>}>
+                trigger={<button className="ui button item"><img className="ui navbar-avatar image" src={"http://127.0.0.1:8000" + this.state.user.avatar[0].image} /></button>}>
                     <div>
                         <div className="navbar-user-menu ui vertical menu">
                             <div className='item navbar-user-menu-placeholder'>Welcome, {localStorage.getItem('profile_name')}!</div>

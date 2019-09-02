@@ -323,9 +323,6 @@ textarea {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
 }
 
-.item .header {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
-}
 
 .custom-sidebar .unfollow-buttton {
     float: right !important;
@@ -349,8 +346,11 @@ textarea {
 
 
 .see-all {
-    cursor: pointer;
-    font-weight: 600;
+    cursor: pointer;   
+}
+
+.see-all:hover {
+    text-decoration: underline;
 }
 
 
@@ -415,9 +415,6 @@ textarea {
     color: white !important;
 }
 
-.item .header {
-    font-family: Verdana, Geneva, Tahoma, sans-serif !important;
-}
 
 .chat-wrapper {
     height: 100% !important;

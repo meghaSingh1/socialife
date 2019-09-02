@@ -58,7 +58,7 @@ export default class ChatRoom extends Component {
 
     connectToSocket = async () => {
         let uuid = this.props.match.params.uuid;
-
+        console.log('hello');
         // this.chatSocket = new WebSocket("wss://socialifenetwork.herokuapp.com/ws/chat/" + uuid + '/');
         this.chatSocket = new WebSocket("ws://127.0.0.1:8000/ws/chat/" + uuid + '/');
         this.chatSocket.onopen = (e) => {
@@ -104,9 +104,9 @@ export default class ChatRoom extends Component {
     }
 
     componentDidMount() {
-        if(this.props.match.params.uuid != null) {
         this.fetchData();
-        this.connectToSocket(); }
+        if(this.props.match.params.uuid != null)
+            this.connectToSocket();
         else
             this.setState({messages: [], lastMessages: [], connectionEstablished: true})
     }
@@ -121,7 +121,8 @@ export default class ChatRoom extends Component {
     }
 
     componentWillUnmount() {
-        this.chatSocket.close();
+        if (this.chatSocket != null && this.chatSocket != undefined)
+            this.chatSocket.close()
     }
 
 
@@ -197,7 +198,7 @@ export default class ChatRoom extends Component {
                 {this.state.messages == null ? <div className='eleven wide column chat-column-2 grid'>
                     <div className='chat-column-2-header row'><h3>Messages</h3></div>
                     <div style={{marginTop: '.5em'}} className="ui active centered inline loader"></div></div> :
-                this.state.messages.length && this.props.match.params.uuid == 0 ? 
+                this.state.messages.length == 0 && this.props.match.params.uuid == undefined ? 
                 <div className='eleven wide column chat-column-2 grid'>
                     <div className='chat-column-2-header row'><h3>Messages</h3></div>
                     <div className="ui warning message">

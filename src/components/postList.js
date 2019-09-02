@@ -93,6 +93,7 @@ export default class PostList extends Component {
                     {'Content-Type': 'application/x-www-form-urlencoded',
                     'Authorization': "Bearer " + token}}).then(async (res) => {
                         this.setState({pictures: []});
+                        this.setState({displayAddImagesSection: 'none'})
                         await this.props.requestPosts();
                     }).catch(err => console.log(err));
                 }
@@ -194,7 +195,7 @@ export default class PostList extends Component {
             const comments = post.comments.map(comment => (
                 <div className="comment">
                 <div className="avatar">
-                  <img src={'http://localhost:8000' + comment.user.avatar} />
+                  <img src={'http://127.0.0.1:8000' + comment.user.avatar[0].image} />
                 </div>
                 <div className="content">
                     <a href={'/profile/' + comment.user.profile_name} className="author">{comment.user.first_name + ' ' + comment.user.last_name}</a>
@@ -225,14 +226,14 @@ export default class PostList extends Component {
                 <div 
   
                     role="listbox" aria-expanded="false" className="post-option">
-                    <i                     onMouseOver={() => this.setState({postOptionHover: true})} 
+                    <i onMouseOver={() => this.setState({postOptionHover: true})} 
                     onMouseOut={() => this.setState({postOptionHover: false})} onClick={this.showPostOption} aria-hidden="true" className="post-option-icon dropdown icon"></i>
                     {postOptions}
                 </div>
                 
                 <div className='ui middle aligned grid post-header'>
                     <div className="ui tiny image two wide column">
-                        <img className='ui image avatar' src={'http://localhost:8000' + post.user.avatar} />
+                        <img className='ui image avatar' src={'http://127.0.0.1:8000' + post.user.avatar[0].image} />
                     </div>
                     <div className='ui eight wide column'>
                     <Link to={'/profile/' + post.user.profile_name} className="post-user-name">{post.user.first_name + ' ' + post.user.last_name}</Link>
@@ -245,7 +246,7 @@ export default class PostList extends Component {
                     {post.images.length == 0 ? '' :
                         post.images.map(image => (
                         <div>
-                        <img src={'http://localhost:8000' + image.image} />
+                        <img src={'http://127.0.0.1:8000' + image.image} />
                         
                         </div>
                         ))}
@@ -286,13 +287,14 @@ export default class PostList extends Component {
                     <input type='submit' className="button ui blue" value="Post" />
                     <button onClick={this.toogleDisplayAddImagesSection} type='button' className="ui button"><i aria-hidden="true" className="images icon"></i> Add Images</button>
                 </div>
-                <div style={{display: this.state.displayAddImagesSection}} className='images-uploader-wrapper'><ImageUploader className='item'
+                <div style={{display: this.state.displayAddImagesSection}} className='images-uploader-wrapper'>
+                    <ImageUploader
                             withIcon={true} singleImage={false} withLabel={false}
-                            buttonText='Choose images' label='Change your avatar'
+                            buttonText='Choose images'
                             onChange={this.onDrop}
                             imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                            maxFileSize={5242880} withPreview={true}
-                /></div>
+                            maxFileSize={5242880} withPreview={true}/>
+                </div>
             </form>
         </div></div>) : '';
 
@@ -317,7 +319,7 @@ export default class PostList extends Component {
                     {this.state.images.length == 0 ? '' :
                         this.state.images.map(image => (
                         <div>
-                        <img src={'http://localhost:8000' + image.image} />
+                        <img src={'http://127.0.0.1:8000' + image.image} />
                         </div>
                         ))}
                     </Carousel>

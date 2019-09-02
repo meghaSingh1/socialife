@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios'
 import {Link} from 'react-router-dom'
 import logo from '../assets/images/logo.png';
-import {Form} from 'semantic-ui-react'
+import ImageUploader from 'react-images-upload'
 
 export default class Login extends Component {
     constructor(props) {
@@ -20,6 +20,7 @@ export default class Login extends Component {
         year: "1998",
         step: 1,
         error: null,
+        avatar: []
       }
     }
 
@@ -37,6 +38,11 @@ export default class Login extends Component {
       }).catch(err => {
           localStorage.clear();
       })
+    }
+
+    onDrop = (picture) => {
+        if(picture.length > 0)
+            this.setState({avatar: picture})
     }
 
     handleStep = (step) => {
@@ -134,6 +140,16 @@ export default class Login extends Component {
                 )
             case 8:
                 return (
+                    <ImageUploader
+                            withIcon={true} singleImage={true} withLabel={true}
+                            buttonText='Choose images' label='Upload your avatar'
+                            onChange={this.onDrop}
+                            imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                            maxFileSize={5242880} withPreview={true}
+                    />
+                )
+            case 9:
+                return (
                     <div className="field required">
                     <label>Last Step: Choose your profile name</label>
                     <div className="ui input input-wrapper">
@@ -147,7 +163,7 @@ export default class Login extends Component {
 
     nextStep = () => {
         let fields = ['', 'email', 'password', 'password2', 'first_name', 'last_name', 'gender', 'profile_name'];
-        if(this.state[fields[this.state.step]] === '' && this.state.step < 7)
+        if((this.state[fields[this.state.step]] === '' && this.state.step < 7) || (this.state.avatar.length == 0 && this.state.step == 8))
             this.setState({error: `This field is required!`});
         else {
         this.setState({error: null});
@@ -166,13 +182,22 @@ export default class Login extends Component {
   
     handleSubmit = () => {
     //   e.preventDefault();
-      if (this.state.step === 8) {
+      if (this.state.step === 9) {
         axios.post('/api/check_profile_name_availability', {profile_name: this.state.profile_name})
         .then(res => {
             if(res.status === 200) {
                 this.setState({error: null});
+                let formData = new FormData(); 
+                for(let i = 0; i < this.state.avatar.length; i++)
+                    formData.append('file', this.state.avatar[0]);
+
+                for (const key of Object.keys(this.state))
+                    if(key != "avatar")
+                        formData.append(key, this.state[key]);
+
                 axios.post('/api/user_sign_up', 
-                this.state)
+                formData, {headers: 
+                {'Content-Type': 'application/x-www-form-urlencoded',}})
                 .then(res => {
                     if (res.status == 200)
                         this.props.history.push('/login');
@@ -186,7 +211,7 @@ export default class Login extends Component {
 
     keyPressed = (e) => {
         if (e.key === "Enter") {
-            if(this.state.step !== 8)
+            if(this.state.step !== 9)
                 this.nextStep();
             else
                 this.handleSubmit();
@@ -194,7 +219,7 @@ export default class Login extends Component {
       }
   
     render() {
-        const nextButton = this.state.step == 8 ?
+        const nextButton = this.state.step == 9 ?
         (<div className="ui two column grid">
             <div className="column">
                 <button type="button" onClick={this.handleSubmit} className="ui blue button login-form-buttons">Register</button>

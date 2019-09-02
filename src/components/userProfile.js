@@ -51,6 +51,7 @@ export default class Login extends Component {
                 }
                 this.setState({isFollowing: isFollowing});
                 this.setState({requestUserIsAnonymous: false, user: res.data.user, userData: res})
+                console.log(this.state.user.avatar[0].image);
             }
             else
                 this.setState({requestUserIsAnonymous: true})
@@ -62,15 +63,19 @@ export default class Login extends Component {
         const profileName = this.props.match.params.profileName;
         let requestData = this.state.requestUserIsAnonymous ? {profile_name: profileName, email: -1} : {profile_name: profileName, email: email};
         await axios.post('/api/get_user_profile', requestData)
-        .then(res => {
+        .then(async res => {
             console.log(res);
             if (res.status === 200) {
                 console.log(res.data)
                 this.setState({user_posts: res.data.user_posts, user: res.data.user})
                 if(!this.state.requestUserIsAnonymous && email == res.data.user.email)
                     this.setState({allowToPost: true})
+                else this.setState({allowToPost: false})
+                console.log(this.state.allowToPost);
+                console.log(this.state.requestUserIsAnonymous);
                 if(!this.state.allowToPost && !this.state.requestUserIsAnonymous)
                     this.setState({canChat: true})
+                else this.setState({canChat: false})
             }
         }).catch(err => {})
     }
@@ -116,14 +121,11 @@ export default class Login extends Component {
         const email = localStorage.getItem('email');
         const token = localStorage.getItem('token');
         if(pictureFiles.length > 0) {
-            console.log(pictureFiles[0]);
-
             let formData = new FormData(); 
             formData.append('file', pictureFiles[0]); 
             formData.append('email', email);
-            formData.append('type', 'avatar')
 
-            axios.post('/api/upload_picture', formData, {headers: 
+            axios.post('/api/upload_avatar', formData, {headers: 
             {'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': "Bearer " + token}}).then(res => {
                 window.location.reload();
@@ -143,7 +145,7 @@ export default class Login extends Component {
 
         const followers = this.state.user == null ? '' : this.state.user.followers == undefined ? '' : this.state.user.followers.length + (this.state.user.followers.length > 1 ? ' Followers' : ' Follower');
         const user_name = this.state.user == null ? '' : (this.state.user.first_name + ' ' + this.state.user.last_name);
-        const avatar = this.state.user == null ? '' : "http://127.0.0.1:8000" + this.state.user.avatar;
+        const avatar = this.state.user == null ? '' : ("http://127.0.0.1:8000" + (this.state.user.avatar.length > 0 ? this.state.user.avatar[0].image : ''));
 
         return (
             <div className='background'>
