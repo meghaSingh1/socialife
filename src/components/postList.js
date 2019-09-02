@@ -17,7 +17,9 @@ export default class PostList extends Component {
         images: [],
         postOptionHover: false,
         postToDelete: -1,
-        openDeleteConfirm: false
+        openDeleteConfirm: false,
+        tag: '',
+        tags: []
       }
     }
 
@@ -35,6 +37,7 @@ export default class PostList extends Component {
     async componentDidUpdate(prevProps) {
         if (prevProps !== this.props) {
             await this.setState({posts: this.props.posts, allowToPost: this.props.allowToPost});
+            console.log(this.props.posts);
             let _this = this;
             //Close the dropdown menu when click outside
             window.addEventListener("click", this.windowOnClick, true);
@@ -75,7 +78,7 @@ export default class PostList extends Component {
         e.preventDefault();
         const email = localStorage.getItem('email');
         const token = localStorage.getItem('token');
-        await axios.post('/api/create_new_post', {email: email, text_content: this.state.text_content}, {headers: 
+        await axios.post('/api/create_new_post', {email: email, text_content: this.state.text_content, tags: this.state.tags}, {headers: 
         {'Content-Type': 'application/x-www-form-urlencoded',
          'Authorization': "Bearer " + token}})
         .then(async (res) => {
@@ -176,6 +179,27 @@ export default class PostList extends Component {
             }
         }).catch(err => {})
     }
+
+    handleAddTagKeyPress = (target) => {
+        if(target.charCode==13){
+            this.addTag();   
+        } 
+    }
+
+    addTag = (e) => {
+        e.preventDefault();
+        if(this.state.tag != '' && !this.state.tags.includes(this.state.tag)){
+            this.setState({tags: [...this.state.tags, ...[this.state.tag]]})
+        }
+        this.setState({tag: ''})
+    }
+
+    deleteTag = (tag) => {
+        let index = this.state.tags.indexOf(tag);
+        let newTags = this.state.tags.slice();
+        newTags.splice(index, 1);
+        this.setState({tags: newTags});
+    }
   
     render() {
         const email = localStorage.getItem('email');
@@ -221,10 +245,14 @@ export default class PostList extends Component {
                     <span className="text">Don't show post from this user</span>
                 </div></div>
             )
+            const postTags = post.tags.map(tag => {
+                return (<div class="ui label">
+                    <i aria-hidden="true" class="tag icon"></i>{tag.name}
+                </div>
+            )});
             return (
             <div className="column post-item">
                 <div 
-  
                     role="listbox" aria-expanded="false" className="post-option">
                     <i onMouseOver={() => this.setState({postOptionHover: true})} 
                     onMouseOut={() => this.setState({postOptionHover: false})} onClick={this.showPostOption} aria-hidden="true" className="post-option-icon dropdown icon"></i>
@@ -251,6 +279,7 @@ export default class PostList extends Component {
                         </div>
                         ))}
                     </Carousel>
+                        {post.tags.length > 0 ? <span className="post-tags">Tags: </span> : ''}{postTags}
                 </div>
 
                 <div className="extra">
@@ -273,13 +302,19 @@ export default class PostList extends Component {
             )
         });
 
+        const formTags = this.state.tags.map(tag => (
+            <div class="ui label">
+            <i aria-hidden="true" class="tag icon"></i>{tag}<i onClick={() => this.deleteTag(tag)} aria-hidden="true" class="delete icon"></i>
+            </div>
+        ))
+
         const createNewPost = this.state.allowToPost ? 
         (<div className='post-input-section'>
         <div className="ui pointing menu">
             <a className="active item">What's on your mind right now?</a>
         </div>
         <div className="ui segment active tab">
-            <form className="ui form" onSubmit={this.handleCreatePost} method="post">
+            <form className="ui form create-post-form" onSubmit={this.handleCreatePost} method="post">
                 <div className='field'>
                     <textarea value={this.state.text_content} required onChange={e => this.setState({text_content: e.target.value})} style={{resize: 'none'}} placeholder="Tell us more" rows="3"></textarea>
                 </div>
@@ -294,6 +329,15 @@ export default class PostList extends Component {
                             onChange={this.onDrop}
                             imgExtension={['.jpg', '.gif', '.png', '.gif']}
                             maxFileSize={5242880} withPreview={true}/>
+                </div>
+            </form>
+            <form onSubmit={this.addTag} className="ui form add-tag-form">
+                <div class="fields">
+                    {formTags}
+                </div>
+                <div className='fields'>
+                    <div className='field'><input value={this.state.tag} onChange={e => this.setState({tag: e.target.value})} type="text" className="" placeholder="Add tags" /></div>
+                    <div className='field'><button type='submit' className="add-tag-button ui button"><i aria-hidden="true" className="add icon"></i></button></div>
                 </div>
             </form>
         </div></div>) : '';

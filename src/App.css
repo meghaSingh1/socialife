@@ -150,8 +150,13 @@ textarea {
     width: 100%;
 }
 
-.post-column {
-    padding-top: 0 !important;
+.add-tag-form .add-tag-button {
+    background-color: white !important;
+    font-size: 1.5em !important;
+    padding: 0.42857143em 0 !important;
+}
+.add-tag-form .add-tag-button .icon {
+    margin: 0 !important;
 }
 
 .post-item {
@@ -210,6 +215,11 @@ textarea {
 
 .post-item .dropdown-options .item:hover {
     background-color: rgb(241, 240, 240);
+}
+
+.post-item .post-content .post-tags {
+    font-size: .9em;
+    color: rgba(87, 87, 87, 0.7);
 }
 
 .feed-container, .chat-container {

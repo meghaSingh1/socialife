@@ -154,12 +154,12 @@ export default class ChatRoom extends Component {
                 </div>
                 </div>
                 <Popup content={msg.user.first_name + ' ' + msg.user.last_name} position='top right'
-                trigger={<img onClick={() => this.props.history.push('/profile/' + msg.user.profile_name)} src={"http://127.0.0.1:8000" + msg.user.avatar} className="ui avatar image"/>} />     
+                trigger={<img onClick={() => this.props.history.push('/profile/' + msg.user.profile_name)} src={"http://127.0.0.1:8000" + msg.user.avatar[0].image} className="ui avatar image"/>} />     
             </div>)
             else
             return (<div role="listitem" className="item chat-message-left">
                 <Popup content={msg.user.first_name + ' ' + msg.user.last_name} position='top left'
-                trigger={<img onClick={() => this.props.history.push('/profile/' + msg.user.profile_name)} src={"http://127.0.0.1:8000" + msg.user.avatar} className="ui avatar image"/>} />     
+                trigger={<img onClick={() => this.props.history.push('/profile/' + msg.user.profile_name)} src={"http://127.0.0.1:8000" + msg.user.avatar[0].image} className="ui avatar image"/>} />     
                 <div className="content">
                 <div className="description">
                     {msg.content}
@@ -174,7 +174,7 @@ export default class ChatRoom extends Component {
         this.state.lastMessages.map(room => (
             <div onClick={() => this.goToRoom(room.chat_room.uuid)} className="item chat-room-list-item">
             <div className="ui tiny image">
-                <img src={'http://127.0.0.1:8000' + room.otherEndUser.avatar} />
+                <img src={'http://127.0.0.1:8000' + room.otherEndUser.avatar[0].image} />
             </div>
             <div className="content">
                 <a className="header">{room.otherEndUser.first_name + ' ' + room.otherEndUser.last_name}</a>

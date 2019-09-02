@@ -63,6 +63,9 @@ export default class Login extends Component {
                             <PostList posts={this.state.user_posts} isHomePage={true} allowToPost={true} requestPosts={this.requestPosts} />
                         </div>
                     </div>
+                    <div className='four wide column feed-column'>
+                        <div>Trending</div>
+                    </div>
                     </div>
                 </div>
             </div>

@@ -36,7 +36,7 @@ export default class Sidebar extends Component {
         for (let i = 0; i < (this.state.followings.length <= 3 ? this.state.followings.length : 3); i++)
             followings.push(<div onMouseOver={() => this.showUnfollowButton(i, true)} onMouseOut={() => this.showUnfollowButton(i, false)} role="listitem" className="item">
                 <button id={"unfollow-" + i} className='ui red button unfollow-buttton'>Unfollow</button>
-                <img src={"http://127.0.0.1:8000" + this.state.followings[i].avatar} className="ui avatar image" />
+                <img src={"http://127.0.0.1:8000" + this.state.followings[i].avatar[0].image} className="ui avatar image" />
                 <div className="content">
                 <div className="header">{this.state.followings[i].first_name + ' ' + this.state.followings[i].last_name}</div>
                     {this.state.followings[i].followers.length} followers
