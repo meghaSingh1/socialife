@@ -1,10 +1,28 @@
 #root {
     height: 100% !important;
-    background-color: #e9e5e5 !important;
+    background-color: #f5f5f5 !important;
 }
 
+.ui.blue {
+    background-image: radial-gradient( circle farthest-corner at 20% 25.1%,  rgba(128,102,255,1) 0%, rgba(83,112,243,1) 100.2% ) !important;
+}
+
+.ui.button:hover {
+    filter: brightness(110%) !important;
+}
+
+.ui.red {
+    background-image: radial-gradient( circle 928px at 17.9% -6.7%,  rgba(255,0,0,1) 0%, rgba(0,0,255,1) 100.2% ) !important;
+}
+
+
 .background {
-    background-color: #e9e5e5 !important;
+    background-color: #f5f5f5 !important;
+}
+
+.ui.button:not(.post-like-button) {
+    padding: .78em 1em;
+    border-radius: 1.3em !important
 }
 
 /* Header */
@@ -12,36 +30,22 @@
 .header-logo:hover {
     background-color: white !important;
 }
-.menu.secondary.main-menu .item {
-    font-size: 1.15em !important;
-    font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    padding: .1em 1em !important;
-}
 
-.menu.secondary.main-menu .bell.icon {
+
+.main-menu .bell.icon {
     margin: 0 !important;
 }
-.menu.secondary.main-menu .ui.floating.label {
-    padding: .3em 8% !important;
-}
 
-.ui.menu.secondary.main-menu {
-    padding: 0 5em !important;
-    margin: 0 !important;
-    box-shadow: 0 1px 2px 0 rgba(34,36,38,.15);
-    width: 100% !important;
-}
-
-
-.menu.secondary.main-menu .item:hover {
+.main-menu .button:hover {
+    background-color: white;
     color: #2185d0 !important;
-    background-color: white !important;
 }
 
 .navbar-avatar {
     width: 2.5em !important;
     height: 2.5em !important;
     border-radius: 50%;
+    margin: 0 1em;
 }
 
 .navbar-user-menu {
@@ -52,6 +56,10 @@
     padding: 0.5em 10px !important;
     font-size: 1.1em;
     z-index: 100;
+}
+
+.navbar-user-menu .item:hover {
+    background-color: rgb(242, 248, 248) !important;
 }
 
 .navbar-user-menu-placeholder {
@@ -73,7 +81,7 @@
 }
 
 .notification-list .list-item:hover {
-    background-color: #dbe1e6;
+    background-color: rgb(242, 248, 248);
 }
 
 .notification-placeholder {
@@ -93,6 +101,12 @@
 
 
 /* Login */
+
+.login-screen, .register-screen {
+    width: 100%;
+    height: 100%;
+    background: url('../src/assets/images/background.png') no-repeat center center fixed;
+}
 
 .login-wrapper, .register-wrapper {
     margin: 0;
@@ -150,12 +164,12 @@ textarea {
     width: 100%;
 }
 
-.add-tag-form .add-tag-button {
+.add-hashtag-form .add-hashtag-button {
     background-color: white !important;
     font-size: 1.5em !important;
     padding: 0.42857143em 0 !important;
 }
-.add-tag-form .add-tag-button .icon {
+.add-hashtag-form .add-hashtag-button .icon {
     margin: 0 !important;
 }
 
@@ -164,7 +178,7 @@ textarea {
     position: relative;
     padding: 10px !important;
     padding-top: 0 !important;
-    margin: 0 10px 15px 10px !important;
+    margin: 1em 0 !important;
     width: 100% !important;
     border: none !important;
     border-radius: .28571429rem !important;
@@ -183,6 +197,7 @@ textarea {
 .post-item .column {
     padding: 0.5em !important;
 }
+
 
 .post-item .post-option {
     position: absolute;
@@ -214,17 +229,46 @@ textarea {
 }
 
 .post-item .dropdown-options .item:hover {
-    background-color: rgb(241, 240, 240);
+    background-color: rgb(242, 248, 248);
 }
 
-.post-item .post-content .post-tags {
+.ui.small.modal {
+    width: 40%;
+    /* border-radius: 1.5em !important; */
+}
+
+.ui.modal .ui.button:not(.primary) {
+    color: white;
+    background-image: radial-gradient( circle 928px at 17.9% -6.7%,  rgba(255,0,0,1) 0%, rgba(0,0,255,1) 100.2% ) !important;
+}
+
+.ui.modal .ui.button.primary {
+    color: white;
+    background-image: radial-gradient( circle farthest-corner at 20% 25.1%,  rgba(128,102,255,1) 0%, rgba(83,112,243,1) 100.2% ) !important;
+}
+
+.ui.small.modal .content {
+    border-top-left-radius: 1.5em !important;
+    border-top-right-radius: 1.5em !important;
+}
+
+.ui.small.modal .actions {
+    border-bottom-left-radius: 1.5em !important;
+    border-bottom-left-radius: 1.5em !important;
+}
+
+.post-item .post-content .post-hashtags {
     font-size: .9em;
     color: rgba(87, 87, 87, 0.7);
 }
 
+.post-item .label:not(.ui.left.pointing.basic.label) {
+    border-radius: 1.3em !important
+}
+
 .feed-container, .chat-container {
     margin: 0 !important;
-    padding: 2em 5% !important;
+    padding: 2em 2.5% !important;
 }
 
 .post-header {
@@ -245,9 +289,29 @@ textarea {
 }
 
 .post-header .avatar {
-    width: 100% !important;
-    height: auto !important;
+    width: 4em !important;
+    height: 4em !important;
 }
+
+.post-header .post-user-name-column, .post-header .post-avatar-column {
+    padding: 1em 0 .5em !important;
+}
+
+.post-header .col-sm-2 {
+    width: 20% !important;
+}
+
+.post-header .col-sm-10 {
+    width: 80% !important;
+}
+
+@media only screen and (min-width: 992px)  {
+    .post-header .col-lg-1 {
+        flex: 0 0 11%;
+        max-width: 11% !important;
+    }
+}
+
 
 .post-content {
     white-space: pre-line;
@@ -257,8 +321,51 @@ textarea {
     color: rgba(0,0,0,.87);
 }
 
+/* Profile */
+
 .profile-container {
-    padding: 2em 5% !important;
+    padding: 2em 2.5% !important;
+}
+
+#nav-following, #nav-followers {
+    padding: 0 !important;
+    border-left: 1px solid #ccc !important;
+    border-right: 1px solid #ccc !important;
+}
+
+.profile-container #profile-tab .nav-link {
+    font-size: 1.1em !important
+}
+
+
+.tab-content .list {
+    padding: 0 !important;
+    border-bottom: none !important;
+}
+
+.profile-list-follow-button {
+    float: right !important;
+}
+
+.tab-content .list .item {
+    border-bottom: 1px solid #ccc;
+    padding: 1em !important;
+    cursor: pointer;
+    background-color: white;
+}
+
+.tab-content.list .item:hover {
+    background-color: rgb(242, 248, 248);
+}
+
+.profile-container #nav-feed {
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.profile-container #nav-feed .ui.menu {
+    border-top: none !important;
 }
 
 .items {
@@ -268,7 +375,7 @@ textarea {
 
 .post-input-section {
     width: 100%;
-    margin: 0 10px 15px 10px !important;
+    margin: 0 0 !important;
 }
 
 .ui.reply.form {
@@ -284,7 +391,7 @@ textarea {
     max-width: 80% !important;
 }
 
-.dimmer .carousel .slider img {
+.dimmer img {
     max-width: 60% !important;
 }
 
@@ -296,71 +403,89 @@ textarea {
     cursor: pointer;
 }
 
+
+.trending-hashtags-container .container-header {
+    font-size: 1.2em !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+}
+
+.trending-hashtags-container .header {
+    font-size: 1.1em !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+}
+
+.web-info {
+    font-weight: 600;
+    color: #545972;
+    padding: .5em .92857143em;
+    padding-right: 0 !important;
+}
+
+.web-info .column {
+    padding: .2em .1em !important;
+    font-size: .9em !important;
+    color: black;
+}
 /* Sidebar */
+#sidebar, #trending-hashtags {
+    width: calc(25% - 40px);
+}
+
+#trending-hashtags {
+    padding: .1em .5em !important;
+    overflow-y: scroll !important;
+    max-height: 80% !important; 
+}
+
+#sidebar {
+    padding: .1em 2em !important;
+}
+
+#trending-hashtags::-webkit-scrollbar {
+    display: none;
+}
+
+#trending-hashtags .notification-avatar {
+    width: 3em !important;
+}
+
 .custom-sidebar {
-    background-color: #e9e5e5 !important;
+    background-color: inherit;
     box-shadow: none !important;
     border: none !important;
+    margin: 0 !important;
 }
+
+
 .custom-sidebar .link-item {
-    font-size: 1.1em !important;
+    font-size: 1.2em !important;
     font-weight: 600 !important;
-    margin: 0 !important;
-}
-
-.custom-sidebar .link-item:hover {
-    color: #2185d0 !important;
-}
-
-.custom-sidebar .link-item.active {
-    color: #2185d0 !important;
-    background-color: rgb(246, 242, 242) !important;
-}
-
-.custom-sidebar .item .icon {
-    margin-right: 1em !important;
-    margin-left: 0 !important;
-}
-
-.custom-sidebar .item .people-i-followed-header {
-    font-size: 1.1em !important;
-    font-weight: 600 !important;
-    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif !important;
-}
-
-.custom-sidebar .item {
-    margin: 0 !important;
+    margin: 0 0 1em !important;
+    padding: .8em !important;
+    border-radius: 0 !important;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
 }
 
 
-.custom-sidebar .unfollow-buttton {
-    float: right !important;
-    padding: .5em !important;
-    display: none;
-}
-
-.custom-sidebar .blue-border-button {
-    border: 1.5px solid#2185d0;
-    color: #2185d0;
-    background-color: white !important;
+.custom-sidebar .link-item.active {
+    color: white !important;
     border-radius: 0 !important;
-    width: 100% !important;
-    margin: .5em 0 0 0 !important;
+    margin-left: -1em !important;
+    margin-right: 1em !important;
+    background: linear-gradient( 90.6deg,  rgba(59,158,255,1) 20%, rgb(148, 203, 255) 80%, rgba(255,0,0,0) ) !important;
 }
 
-.custom-sidebar .blue-border-button:hover {
-    background-color: #2185d0 !important;
-    color: white;
+.custom-sidebar .link-item:hover:not(.active) {
+    background: rgb(148, 203, 255) !important;
+    /* color: white !important; */
 }
 
 
-.see-all {
-    cursor: pointer;   
-}
-
-.see-all:hover {
-    text-decoration: underline;
+.custom-sidebar .item .icon, .sidebar-following .icon {
+    margin-right: 1em !important;
+    margin-left: 0 !important;
 }
 
 
@@ -394,8 +519,17 @@ textarea {
     margin-right: auto !important;
 }
 
-.fileUploader.item {
+.fileContainer{
+    border: none !important;
+    box-shadow: none !important
+}
+
+.avatar-uploader {
+    text-align: center;
+    background: white;
+    padding-bottom: 1em;
     box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
+    border-radius: .28571429rem;
 }
 
 
@@ -413,7 +547,7 @@ textarea {
 .chat-message-left .description, .chat-message-right .description {
     padding: .8em !important;
     border-radius: .4em;
-    background-color :#d8dfe4;
+    background :#d8dfe4;
 }
 
 .chat-message-left .avatar, .chat-message-right .avatar {
@@ -421,7 +555,7 @@ textarea {
 }
 
 .chat-message-right .description {
-    background-color :#2185d0;
+    background :radial-gradient( circle farthest-corner at 20% 25.1%,  rgba(128,102,255,1) 0%, rgba(83,112,243,1) 100.2% );
     color: white !important;
 }
 
@@ -431,17 +565,10 @@ textarea {
     margin: 0 !important
 }
 
-.chat-wrapper .ui.menu.secondary.main-menu {
-    width: 100% !important;
-}
-
-.chat-wrapper .ui.menu.secondary.main-menu .item {
-    padding: .2em 1em !important;
-}
 
 .chat-container {
     height: 90% !important;
-    background-color: #e9e5e5 !important;
+    background-color: #e9ebee !important;
 }
 
 .chat-column-2 {
@@ -468,7 +595,7 @@ textarea {
 }
 
 .chat-message-section {
-    height: 80%;
+    max-height: 75%;
     overflow: auto;
 }
 
@@ -491,8 +618,7 @@ textarea {
 }
 
 .send-message-form .button {
-    width: 100%;
-    background-color :#2185d0 !important;
+    background: radial-gradient( circle farthest-corner at 20% 25.1%,  rgba(128,102,255,1) 0%, rgba(83,112,243,1) 100.2% ) !important;
     color: white !important;
 }
 
@@ -535,8 +661,135 @@ textarea {
 
 
 .chat-room-list-item:hover {
-    background-color: rgb(212, 210, 210) !important;
+    background-color: rgb(242, 248, 248) !important;
     cursor: pointer;
 }
 
 /*  */
+.create-post-form .create-post-user-avatar {
+    width: 5em !important;
+    height: 5em !important;
+}
+
+.create-post-form textarea{
+    border: none !important;
+}
+
+.create-post-form input[type=submit] {
+    font-size: 1.1em !important;
+}
+
+.create-post-form .add-hashtags-button, .create-post-form .add-image-button {
+    background-color: inherit;
+    border-radius: 50% !important;
+    padding: 0.5em !important;
+    color: white;
+}
+
+.create-post-form .add-image-button img, .add-hashtags-button img {
+    margin: 0 !important;
+    width: 2em !important;
+}
+
+.create-post-form .add-image-button:hover, .add-image-button:focus {
+    background-color: #dddddd !important;
+}
+
+.post-item .post-hashtag, .post-hashtag {
+    background-color: #E1ECF4 !important;
+    border-radius: 3px !important;
+}
+
+.add-hashtag-input {
+    border-radius: 0 !important;
+}
+
+.ui.grid:not(.send-message-form) {
+    margin: 0 !important;
+}
+
+/* Bootstrap Component */
+
+.navbar .notification-avatar {
+    width: 2em;
+}
+
+.navbar.main-menu .button {
+    text-align: left !important;
+}
+
+.dropdown-header {
+    font-size: 1.2em;
+}
+
+#sidebar .list-group-item, .trending-hashtags-container .list-group-item {
+    border: none !important;
+    border-bottom: 1px solid #ccc !important;
+}
+
+.list-group-item.media {
+    display: flex !important;
+    text-decoration: none !important;
+    color: inherit;
+    background-color: inherit;
+}
+.sidebar-following .list-group-item.media:hover, .trending-hashtags-container .list-group-item.media:hover {
+    background-color: rgb(226, 225, 225);
+    cursor: pointer;
+}
+.list-group {
+    border-bottom-left-radius: 1em !important;
+    border-bottom-right-radius: 1em !important;
+}
+.sidebar-following, .trending-hashtags-container {
+    /* border-radius: 1em !important; */
+    background-color: rgb(242, 248, 248);
+    border: none !important;
+    box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5 !important;
+    background-color: rgb(242, 248, 248) !important;
+}
+
+.sidebar-following .card-header, .trending-hashtags-container .card-header {
+    font-size: 1.2em !important;
+    font-weight: 600;
+}
+
+.chooseFileButton {
+    background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(87,108,117,1) 0%, rgba(37,50,55,1) 100.2% ) !important;
+}
+
+.chooseFileButton:hover {
+    filter: brightness(120%)
+}
+
+/* Notification */
+
+.notification-column {
+    /* border: 1px solid #ccc; */
+    box-shadow: 0 1px 2px 1px rgba(34,36,38,.15);
+}
+
+.notification-column .notification-avatar {
+    width: 5em !important;
+}
+
+.notification-column .notification-item {
+    background-color: white;
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px solid #ccc;
+}
+
+.notification-column .notification-item:hover:not(.notification-header) {
+    background-color: rgb(242, 248, 248) !important;
+}
+
+.notification-column .notification-item.notification-header h4 {
+    text-align: center !important;
+    width: 100% !important;
+    cursor: pointer;
+}
+
+.notification-column .notification-item.notification-header .icon {
+    cursor: pointer;
+}

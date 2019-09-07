@@ -56,7 +56,7 @@ export default class Login extends Component {
       </div>) : '';
       return (
         <div className="login-screen">
-            <div className="ui text container login-wrapper">
+            <div className="ui text login-wrapper">
                 <div className="ui card login-card">
                     <div className="content login-form-header">
                         <img className='login-form-logo' src={logo} alt="Logo" />

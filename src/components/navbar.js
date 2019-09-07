@@ -2,15 +2,20 @@ import React, {Component} from 'react';
 import axios from 'axios'
 import {Link} from 'react-router-dom'
 import logo from '../assets/images/logo.png'
-import { Popup } from 'semantic-ui-react'
 
 var globalSocket = null;
-function getOffset(el) {
-    const rect = el.getBoundingClientRect();
-    return {
-        left: rect.left + window.scrollX,
-        top: rect.top + window.scrollY
-    };
+
+window.onresize = () => {
+    let sidebar = document.getElementById("sidebar");
+    let trendingHashTags = document.getElementById("trending-hashtags");
+
+    if (sidebar != null) {
+        sidebar.style.width = sidebar.parentElement.clientWidth - 32 + 'px';
+    }
+
+    if (trendingHashTags != null) {
+        trendingHashTags.style.width = trendingHashTags.parentElement.clientWidth - 32 + 'px';
+    }
 }
 
 export default class Navbar extends Component {
@@ -29,34 +34,9 @@ export default class Navbar extends Component {
         this.timer = null;
     }
 
-    componentWillUnmount() {
-        window.onscroll = null;
-    }
 
     async componentDidUpdate(prevProps) {
         if (prevProps !== this.props && this.props.userData !== null) {
-            let _this = this;
-            let sidebar = document.getElementById("sidebar");
-            let mainMenu = document.getElementById("main-menu");
-            if (sidebar != null) {
-                    let left = getOffset(sidebar).left;
-                    let width = sidebar.clientWidth;
-                    let menuHeight = this.divElement.clientHeight;
-
-                window.onscroll = function() {
-                    if(window.pageYOffset <= mainMenu.clientHeight + 10) {
-                        _this.setState({menuPosition: 'static'})
-                        sidebar.style.position = 'static';
-                    }
-                    else {
-                        _this.setState({menuPosition: 'fixed'})
-                        sidebar.style.top = menuHeight + 32 + 'px';
-                        sidebar.style.width = width + 'px';
-                        sidebar.style.position = 'fixed';
-                    }
-                };
-            }
-
             const res = this.props.userData;
             if (res.status == 200) {
                 let newNotifications = 0;
@@ -143,10 +123,10 @@ export default class Navbar extends Component {
     goToChat = () => {
         if(this.state.chatRooms.length > 0) {
             let chatRoom = this.state.chatRooms[0];
-            this.props.history.push('/chat/' + chatRoom.uuid);
+            this.props.history.push('/message/' + chatRoom.uuid);
         }
         else
-            this.props.history.push('/chat/');
+            this.props.history.push('/message/');
     }
 
     searchAutocomplete = (e) => {
@@ -176,13 +156,11 @@ export default class Navbar extends Component {
     render() {
         const notifications = this.state.notifications != null ? 
         this.state.notifications.map(notification => (
-            <Link to={notification.url} role="listitem" className="item list-item">
-            <img src={'http://127.0.0.1:8000' + notification.from_user.avatar[0].image} className="ui avatar image"/>
-            <div className="content">
-              <a className="header">{notification.from_user.first_name + ' ' + notification.from_user.last_name}</a>
-              <div className="description">
-                {notification.content}
-              </div>
+            <Link to={notification.url} class="dropdown-item media my-0">
+                <img className="notification-avatar rounded-circle mr-2" src={'http://127.0.0.1:8000' + notification.from_user.avatar[0].image}/>
+                <div class="media-body">
+                    <h6 class="mt-0 mb-1">{notification.from_user.first_name + ' ' + notification.from_user.last_name}</h6>
+                    {notification.content}
             </div>
           </Link>
         )) : '';
@@ -190,75 +168,118 @@ export default class Navbar extends Component {
 
         return (
             this.state.requestUserIsAnonymous == null || this.state.requestUserIsAnonymous == true ?
-            (<div ref={ (divElement) => this.divElement = divElement} id='main-menu' style={{backgroundColor: 'white', padding: '5px 5px'}} className="ui secondary menu main-menu">
-            <a href='/' style={{padding: '0px 5px'}} className="header item header-logo"><img style={{width: '140px'}} src={logo} alt="Logo" /></a>
-            <div className="right menu">
-            <button style={{padding: '.1em'}} className="ui button item"><Link to='/login'><i aria-hidden="true" className="sign-in icon large"></i>Sign In</Link></button>
+            (<nav ref={ (divElement) => this.divElement = divElement} class="navbar navbar-expand-lg navbar-light bg-white sticky-top py-0 px-5 main-menu">
+            <Link class="navbar-brand" to="/"><img style={{width: '140px'}} src={logo} alt="Logo" /></Link>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li className="nav-item">
+                        <button className="ui button bg-white"><Link to='/login'><i aria-hidden="true" className="sign-in icon large"></i>Sign In</Link></button>
+                    </li>
+                </ul>
             </div>
-            </div>) :
+            </nav>) :
 
-            (<div id="main-menu"  ref={ (divElement) => this.divElement = divElement}
-            style={{backgroundColor: 'white', padding: '5px 5px', zIndex: '50', position: this.state.menuPosition, paddingBottom: this.state.menuPaddingBottom}} 
-            className="ui secondary menu main-menu">
-                <a href='/' style={{padding: '0px 5px'}} className="header item header-logo"><img style={{width: '140px'}} src={logo} alt="Logo" /></a>
-                <div className="right menu">
-                <div className="item">
-                    <div className="ui icon input">
-                        <div className="ui search">
-                        <div className="ui icon input">
-                        <input value={this.state.searchQuery} className='prompt' onBlur={this.searchBarFocusOut} onChange={this.searchAutocomplete} style={{width: '100%'}} type="text" placeholder="Search..." />
-                            <i aria-hidden="true" className="search icon"></i>
-                        </div>
-                        <div onMouseOver={() => this.setState({searchResultHover: true})} 
-                        onMouseOut={() => this.setState({searchResultHover: false})} 
-                        style={{display: this.state.displayResult}} role="list" className="results">
-                            {this.state.searchResult.map(item => (
-                                <div onClick={() => {
-                                    this.setState({displayResult: 'none', searchQuery: ''});
-                                    this.props.history.push('/profile/' + item.profile_name);
-                                }} className="result">
-                                    <div className="image">
-                                        <img className='avatar' src={'http://127.0.0.1:8000' + item.avatar[0].image}/>
-                                    </div>
-                                    <div className="content">
-                                        <div className="title">{item.first_name + ' ' + item.last_name}</div>
-                                        <div className="description">{item.profile_name}</div>
-                                    </div>
+            (<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top py-0 px-5 main-menu">
+            <Link class="navbar-brand" to="/"><img style={{width: '140px'}} src={logo} alt="Logo" /></Link>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          
+            <div class="collapse navbar-collapse d-md-none" id="navbarSupportedContent">
+                <ul class="navbar-nav d-md-none">
+                <li class="nav-item">
+                    <Link class="nav-link" onClick={this.goToChat}>
+                        <i aria-hidden="true" className="bell outline icon"></i>Message
+                    </Link>
+                </li>
+                <li class="nav-item">
+                    <Link className="text-secondary nav-link" to={'/profile/' + localStorage.getItem('profile_name')}>
+                        <i aria-hidden="true" className="address book outline icon"></i>Profile
+                    </Link>
+                </li>
+                <li class="nav-item">
+                    <Link class="nav-link" onClick={this.handleLogout}>
+                        <i aria-hidden="true" className="sign-out icon"/>Logout
+                    </Link>
+                </li>
+                </ul>
+            </div>
+
+            <div class="collapse navbar-collapse" id="">
+                <div class="navbar-nav ml-auto mr-0">
+
+                <div class="nav-item">
+                <div className="ui icon input mx-2 px-5">
+                <div className="ui search">
+                    <div style={{padding: ".78em 0"}} className="ui icon input">
+                    <input value={this.state.searchQuery} className='prompt' onBlur={this.searchBarFocusOut} onChange={this.searchAutocomplete} style={{minWidth: '280px'}} type="text" placeholder="Search..." />
+                        <i aria-hidden="true" className="search icon"></i>
+                    </div>
+                    <div onMouseOver={() => this.setState({searchResultHover: true})} 
+                    onMouseOut={() => this.setState({searchResultHover: false})} 
+                    style={{display: this.state.displayResult}} role="list" className="results">
+                        {this.state.searchResult.map(item => (
+                            <div onClick={() => {
+                                this.setState({displayResult: 'none', searchQuery: ''});
+                                this.props.history.push('/profile/' + item.profile_name);
+                            }} className="result">
+                                <div className="image">
+                                    <img className='avatar' src={'http://127.0.0.1:8000' + item.avatar[0].image}/>
                                 </div>
-                            ))}
-                        </div>
-                        </div>
+                                <div className="content">
+                                    <div className="title">{item.first_name + ' ' + item.last_name}</div>
+                                    <div className="description">{item.profile_name}</div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                    
+                    </div>
                 </div>
-                <button style={{padding: '.1em'}} onClick={this.goToChat} className="ui button item">
-                    <i aria-hidden="true" className="mail outline icon large"></i>
-                    {this.state.newMessages == 0 ? '' : <div className="floating ui red label">{this.state.newMessages}</div>}
-                </button>
-                <Popup on='click' style={{padding: '0px'}} position = 'bottom center'
-                trigger={<button onClick={this.readNotifications} style={{padding: '.1em'}} className="ui button item"><i aria-hidden="true" className="bell outline icon large"></i>{this.state.newNotifications == 0 ? '' : <div className="floating ui red label">{this.state.newNotifications}</div>}</button>}>
-                    <div>
-                        <div role="list" className="ui list notification-list">
-                            <div style={{fontSize: '1.1em', fontWeight: '600'}} className='item notification-placeholder'>What's new?</div>
-                            {notifications}
-                            <div className='item notification-placeholder'><a>See more</a></div>
-                        </div>
-                    </div>
-                </Popup>
-                <Popup on='click' style={{padding: '0px'}} position = 'bottom right'
-                trigger={<button className="ui button item"><img className="ui navbar-avatar image" src={"http://127.0.0.1:8000" + this.state.user.avatar[0].image} /></button>}>
-                    <div>
-                        <div className="navbar-user-menu ui vertical menu">
-                            <div className='item navbar-user-menu-placeholder'>Welcome, {localStorage.getItem('profile_name')}!</div>
-                            <Link to={'/profile/' + localStorage.getItem('profile_name')} className='item'>
-                                <i aria-hidden="true" className="address book outline icon"></i>Profile</Link>
-                            <Link className='item' onClick={this.handleLogout}>
-                            <i aria-hidden="true" className="sign-out icon"></i>Logout</Link>
-                        </div>
-                    </div>
-                </Popup>
                 </div>
-                </div>)
+
+                <div class="nav-item dropdown mx-2">
+                <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                    <button onClick={this.goToChat} className="ui button bg-white">
+                        <i aria-hidden="true" className="mail outline icon large"></i>
+                        {this.state.newMessages === 0 ? '' : <span class="badge badge-pill badge-danger">{this.state.newMessages}</span>}
+                    </button>
+                </a>
+                </div>
+
+                <div class="nav-item dropdown mx-2">
+                    <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        <button onClick={this.readNotifications} className="ui button dropdown-item bg-white">
+                            <i aria-hidden="true" className="bell outline icon large"></i>
+                            {this.state.newNotifications === 0 ? '' : (<span class="badge badge-pill badge-danger">{this.state.newNotifications}</span>)}
+                        </button>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right list-unstyled py-0">
+                    <h4 class="dropdown-header border-bottom text-center">What is new?</h4>
+                    {notifications}
+                    <Link to='/notifications' className='dropdown-item border-top text-center'>See more</Link>
+                    </ul>
+                </div>
+
+                <div class="nav-item dropdown mx-2">
+                    <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        <img className="ui navbar-avatar image" src={"http://127.0.0.1:8000" + this.state.user.avatar[0].image} />
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right py-0">
+                    <h4 class="dropdown-header border-bottom text-center">Welcome, {localStorage.getItem('profile_name')}!</h4>
+                    <Link to={'/profile/' + localStorage.getItem('profile_name')} className='dropdown-item'>
+                        <i aria-hidden="true" className="address book outline icon"></i>Profile
+                    </Link>
+                    <Link className='dropdown-item' onClick={this.handleLogout}>
+                        <i aria-hidden="true" className="sign-out icon"></i>Logout
+                    </Link>
+                    </div>
+                </div>
+                </div>
+            </div>
+          </nav>)
         );
     }
 }

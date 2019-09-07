@@ -6,7 +6,8 @@ import Signup from './components/signup'
 import Home from './components/home'
 import UserProfile from './components/userProfile'
 import ChatRoom from './components/chatRoom'
-import Search from './components/Search'
+import Notification from './components/notification'
+import '../src/assets/css/bootstrap.min.css'
 
 import axios from 'axios'
 
@@ -19,7 +20,8 @@ function App() {
         <Route path="/signup" exact component={Signup} />
         <Route path="/" exact component={Home} />
         <Route path="/profile/:profileName" component={UserProfile} />
-        <Route path="/chat/:uuid?" component={ChatRoom} />
+        <Route path="/message/:uuid?" component={ChatRoom} />
+        <Route path="/notifications" component={Notification} />
     </Router>
   );
 }

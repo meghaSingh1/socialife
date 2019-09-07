@@ -5,6 +5,9 @@ import ImageUploader from 'react-images-upload'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import { Dimmer, Confirm } from 'semantic-ui-react'
+import pictureIcon from '../assets/icon/picture.png'
+import hashTagIcon from '../assets/icon/hashtag.png'
+import emojiIcon from '../assets/icon/emoji.png'
 
 export default class PostList extends Component {
     constructor(props) {
@@ -14,17 +17,18 @@ export default class PostList extends Component {
         allowToPost: false,
         pictures: [],
         displayAddImagesSection: 'none',
+        displayAddHashTagForm: 'none',
         images: [],
         postOptionHover: false,
         postToDelete: -1,
         openDeleteConfirm: false,
-        tag: '',
-        tags: []
+        hashtag: '',
+        hashtags: [],
+        userAvatar: null
       }
     }
 
     windowOnClick = () => {
-        console.log(this.state.postOptionHover);
         if(!this.state.postOptionHover) {
             let optionDropdowns = document.getElementsByClassName("dropdown-options");
             for (let i = 0; i < optionDropdowns.length; i++) {
@@ -36,7 +40,7 @@ export default class PostList extends Component {
 
     async componentDidUpdate(prevProps) {
         if (prevProps !== this.props) {
-            await this.setState({posts: this.props.posts, allowToPost: this.props.allowToPost});
+            await this.setState({posts: this.props.posts, allowToPost: this.props.allowToPost, userAvatar: this.props.userAvatar});
             console.log(this.props.posts);
             let _this = this;
             //Close the dropdown menu when click outside
@@ -50,9 +54,11 @@ export default class PostList extends Component {
 
     handleLike = (e, postUUID) => {
         //Change the UI
-        let numberOfLikes = Number(e.target.nextElementSibling.innerHTML.split(' ')[0]);
+        let likeNumber = document.getElementById("like-" + postUUID);
+        let numberOfLikes = Number(likeNumber.innerHTML.split(' ')[0]);
+        console.log(numberOfLikes);
 
-        e.target.nextElementSibling.innerHTML = e.target.classList.contains('outline') ?
+        likeNumber.innerHTML = e.target.classList.contains('outline') ?
         (numberOfLikes + 1 + (numberOfLikes+1 > 1 ?  ' Likes' : ' Like')) : (numberOfLikes - 1 + (numberOfLikes-1 > 1 ?  ' Likes' : ' Like'));
 
         e.target.classList.contains('outline') ? e.target.classList.add('red') :
@@ -78,7 +84,7 @@ export default class PostList extends Component {
         e.preventDefault();
         const email = localStorage.getItem('email');
         const token = localStorage.getItem('token');
-        await axios.post('/api/create_new_post', {email: email, text_content: this.state.text_content, tags: this.state.tags}, {headers: 
+        await axios.post('/api/create_new_post', {email: email, text_content: this.state.text_content, hashtags: this.state.hashtags}, {headers: 
         {'Content-Type': 'application/x-www-form-urlencoded',
          'Authorization': "Bearer " + token}})
         .then(async (res) => {
@@ -143,7 +149,11 @@ export default class PostList extends Component {
     toogleDisplayAddImagesSection = async () => {
         let display = this.state.displayAddImagesSection === 'none' ? 'block' : 'none';
         await this.setState({displayAddImagesSection: display})
-        console.log(this.state.displayAddImagesSection);
+    }
+
+    toogleDisplayAddHashTagForm = async () => {
+        let display = this.state.displayAddHashTagForm === 'none' ? 'block' : 'none';
+        await this.setState({displayAddHashTagForm: display})
     }
 
     openImageDimmer = (imageIndex, index, images) => {
@@ -156,6 +166,10 @@ export default class PostList extends Component {
     }
 
     showPostOption = (e) => {
+        let optionDropdowns = document.getElementsByClassName("dropdown-options");
+        for (let i = 0; i < optionDropdowns.length; i++) {
+            optionDropdowns[i].style.display = "none";
+        }
         let dropdown = e.target.nextSibling;
         dropdown.style.display = dropdown.style.display == "block" ? "none" : "block";
     }
@@ -180,25 +194,30 @@ export default class PostList extends Component {
         }).catch(err => {})
     }
 
-    handleAddTagKeyPress = (target) => {
+    handleAddHashTagKeyPress = (target) => {
         if(target.charCode==13){
-            this.addTag();   
+            this.addHashTag();   
         } 
     }
 
-    addTag = (e) => {
+    addHashTag = (e) => {
         e.preventDefault();
-        if(this.state.tag != '' && !this.state.tags.includes(this.state.tag)){
-            this.setState({tags: [...this.state.tags, ...[this.state.tag]]})
+        if(this.state.hashtag != '' && !this.state.hashtags.includes(this.state.hashtag)){
+            if (this.state.hashtags.length >= 6) {
+                let newHashTags = this.state.hashtags.slice();
+                newHashTags.shift()
+                newHashTags.push(this.state.hashtag);
+                this.setState({hashtags: newHashTags}); }
+            else this.setState({hashtags: [...this.state.hashtags.slice(), ...[this.state.hashtag]]})
         }
-        this.setState({tag: ''})
+        this.setState({hashtag: ''})
     }
 
-    deleteTag = (tag) => {
-        let index = this.state.tags.indexOf(tag);
-        let newTags = this.state.tags.slice();
-        newTags.splice(index, 1);
-        this.setState({tags: newTags});
+    deleteHashTag = (hashtag) => {
+        let index = this.state.hashtags.indexOf(hashtag);
+        let newHashTags = this.state.hashtags.slice();
+        newHashTags.splice(index, 1);
+        this.setState({hashtags: newHashTags});
     }
   
     render() {
@@ -214,7 +233,7 @@ export default class PostList extends Component {
                     break;
                 }
             }
-            const likeButtonClass = !likedByMe ? 'like icon outline link large' : 'red like icon link large';
+            const likeButtonClass = !likedByMe ? 'like icon outline link' : 'red like icon link';
             const addACommentDisplay = post.showCommentForm != true ? {display: 'none'} : {display: 'inherit'}
             const comments = post.comments.map(comment => (
                 <div className="comment">
@@ -228,44 +247,35 @@ export default class PostList extends Component {
                 </div>
               </div>
             ))
-            const postOptions = post.user.profile_name === localStorage.getItem('profile_name') ? (
-                <div style={{display: 'none'}} className="menu transition dropdown-options">
-                <div onClick={() => this.setState({postToDelete: post.uuid, openDeleteConfirm: true})} role="option" className="item">
-                    <span className="text">Delete this post</span>
-                </div>
-                <div role="option" className="item">
-                    <span className="text">Change privacy</span>
-                </div></div>
-            ) : (
-                <div style={{display: 'none'}} className="menu transition dropdown-options">
-                <div role="option" className="item">
-                    <span className="text">Hide this post</span>
-                </div>
-                <div role="option" className="item">
-                    <span className="text">Don't show post from this user</span>
-                </div></div>
-            )
-            const postTags = post.tags.map(tag => {
-                return (<div class="ui label">
-                    <i aria-hidden="true" class="tag icon"></i>{tag.name}
+
+            const postDropdown = post.user.profile_name === localStorage.getItem('profile_name') ?
+            (<div class="dropdown-menu dropdown-menu-right" aria-labelledby="notification-dropdown">
+                <a onClick={() => this.setState({postToDelete: post.uuid, openDeleteConfirm: true})} class="dropdown-item" href="#">Delete this post</a>
+                <a class="dropdown-item" href="#">Change post privacy</a>
+            </div>) : (
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notification-dropdown">
+                <a class="dropdown-item" href="#">Hide this post</a>
+                <a class="dropdown-item" href="#">{"Stop showing post from " + post.user.first_name + " " + post.user.last_name}</a>
+            </div>
+            );
+
+            const postHashTags = post.hashtags.map(hashtag => {
+                return (<div class="ui label post-hashtag">
+                    {hashtag.name}
                 </div>
             )});
             return (
-            <div className="column post-item">
-                <div 
-                    role="listbox" aria-expanded="false" className="post-option">
-                    <i onMouseOver={() => this.setState({postOptionHover: true})} 
-                    onMouseOut={() => this.setState({postOptionHover: false})} onClick={this.showPostOption} aria-hidden="true" className="post-option-icon dropdown icon"></i>
-                    {postOptions}
-                </div>
+            <div className="container post-item">
+                <a style={{cursor: 'pointer'}} aria-haspopup="true" aria-expanded="false" role="button" id="notification-dropdown" data-toggle="dropdown" className="float-right"><i class="triangle down icon"></i></a>
+                {postDropdown}
                 
-                <div className='ui middle aligned grid post-header'>
-                    <div className="ui tiny image two wide column">
+                <div className='row post-header'>
+                    <div className="col-sm-2 col-lg-1 post-avatar-column">
                         <img className='ui image avatar' src={'http://127.0.0.1:8000' + post.user.avatar[0].image} />
                     </div>
-                    <div className='ui eight wide column'>
-                    <Link to={'/profile/' + post.user.profile_name} className="post-user-name">{post.user.first_name + ' ' + post.user.last_name}</Link>
-                    <div className="post-time">{post.date_created}</div>
+                    <div className='col-sm-10 col-lg-10 post-user-name-column'>
+                        <Link to={'/profile/' + post.user.profile_name} className="post-user-name">{post.user.first_name + ' ' + post.user.last_name}</Link>
+                        <div className="post-time">{post.date_created}</div>
                     </div>
                 </div>
                 <div className="post-content">
@@ -279,13 +289,17 @@ export default class PostList extends Component {
                         </div>
                         ))}
                     </Carousel>
-                        {post.tags.length > 0 ? <span className="post-tags">Tags: </span> : ''}{postTags}
+                        {postHashTags}
                 </div>
 
                 <div className="extra">
-                    <i aria-hidden="true" onClick={(e) => this.handleLike(e, post.uuid)} className={likeButtonClass}></i>
-                    <a className="ui label">{post.liked_by.length + (post.liked_by.length > 1 ? ' Likes' : ' Like')}</a>
-                    <a className='ui label' onClick={() => this.showAddComment(index)}>Add a comment</a>
+                    <div class="ui right labeled button post-like">
+                        <button style={{padding: '0 .7em'}} class="ui icon button post-like-button" tabindex="0">
+                            <i onClick={(e) => this.handleLike(e, post.uuid)} aria-hidden="true" className={likeButtonClass}></i>
+                        </button>
+                        <a id={"like-" + post.uuid} style={{fontSize: '.85714286rem'}} class="ui left pointing basic label">{post.liked_by.length + (post.liked_by.length > 1 ? ' Likes' : ' Like')}</a>
+                    </div>
+                    <div style={{cursor: 'pointer'}} className='ui blue label' onClick={() => this.showAddComment(index)}>Add a comment</div>
                     <div className="ui comments">
                         <h3 className="ui dividing header">Comments</h3>
                         {comments}
@@ -302,9 +316,9 @@ export default class PostList extends Component {
             )
         });
 
-        const formTags = this.state.tags.map(tag => (
-            <div class="ui label">
-            <i aria-hidden="true" class="tag icon"></i>{tag}<i onClick={() => this.deleteTag(tag)} aria-hidden="true" class="delete icon"></i>
+        const formHashTags = this.state.hashtags.map(hashtag => (
+            <div class="ui label post-hashtag">
+            {hashtag}<i onClick={() => this.deleteHashTag(hashtag)} aria-hidden="true" class="delete icon"></i>
             </div>
         ))
 
@@ -315,12 +329,15 @@ export default class PostList extends Component {
         </div>
         <div className="ui segment active tab">
             <form className="ui form create-post-form" onSubmit={this.handleCreatePost} method="post">
-                <div className='field'>
+                <div className='fields'>
+                    <img className='create-post-user-avatar rounded-circle' src={'http://127.0.0.1:8000' + this.state.userAvatar} />
                     <textarea value={this.state.text_content} required onChange={e => this.setState({text_content: e.target.value})} style={{resize: 'none'}} placeholder="Tell us more" rows="3"></textarea>
                 </div>
                 <div className="field">
-                    <input type='submit' className="button ui blue" value="Post" />
-                    <button onClick={this.toogleDisplayAddImagesSection} type='button' className="ui button"><i aria-hidden="true" className="images icon"></i> Add Images</button>
+                    <input style={{float: 'right'}} type='submit' className="button ui blue" value="Post" />
+                    <button onClick={this.toogleDisplayAddImagesSection} type='button' className="ui button add-image-button"><img src={pictureIcon} /></button>
+                    <button onClick={this.toogleDisplayAddHashTagForm} type='button' className="ui button add-hashtags-button"><img src={hashTagIcon} /></button>
+                    <button type='button' className="ui button add-image-button"><img src={emojiIcon} /></button>
                 </div>
                 <div style={{display: this.state.displayAddImagesSection}} className='images-uploader-wrapper'>
                     <ImageUploader
@@ -331,33 +348,33 @@ export default class PostList extends Component {
                             maxFileSize={5242880} withPreview={true}/>
                 </div>
             </form>
-            <form onSubmit={this.addTag} className="ui form add-tag-form">
-                <div class="fields">
-                    {formTags}
-                </div>
-                <div className='fields'>
-                    <div className='field'><input value={this.state.tag} onChange={e => this.setState({tag: e.target.value})} type="text" className="" placeholder="Add tags" /></div>
-                    <div className='field'><button type='submit' className="add-tag-button ui button"><i aria-hidden="true" className="add icon"></i></button></div>
+            {formHashTags}
+            <form style={{display: this.state.displayAddHashTagForm, marginTop: '.5em'}} onSubmit={this.addHashTag} className="ui form add-hashtag-form">
+                <div className='field'>
+                    <input value={this.state.hashtag} onChange={e => this.setState({hashtag: e.target.value})} type="text" className="add-hashtag-input border-left-0 border-right-0 border-top-0" placeholder="Add hashtags" />
                 </div>
             </form>
         </div></div>) : '';
 
         const post_contents = this.state.posts == null ? (
-            <div><div className="ui">
             <div className=''>
                 {createNewPost}
-            </div>
-            </div><div className="ui active centered inline loader"></div></div>) :
-        (<div className="ui">
-            <div className=''>
+                <div className="ui active centered inline loader"></div>
+            </div>) :
+            (<div className=''>
                 {createNewPost}
                 {posts}
-            </div>
-        </div>)
+            </div>)
 
         return (
             <div className="post-list">
                 {post_contents}
+                <Confirm
+                    open={this.state.openDeleteConfirm}
+                    content='Are you sure you want to delete this post?'
+                    onCancel={() => this.setState({openDeleteConfirm: false})}
+                    onConfirm={this.deletePost}
+                />
                 <Dimmer active={this.state.dimmerActive} onClickOutside={this.closeImageDimmer} page>
                     <Carousel>
                     {this.state.images.length == 0 ? '' :
@@ -369,12 +386,6 @@ export default class PostList extends Component {
                     </Carousel>
                     <i onClick={this.closeImageDimmer} aria-hidden="true" className="x icon dimmer-close-button"></i>
                 </Dimmer>
-                <Confirm
-                    open={this.state.openDeleteConfirm}
-                    content='Are you sure you want to delete this post?'
-                    onCancel={() => this.setState({openDeleteConfirm: false})}
-                    onConfirm={this.deletePost}
-                />
             </div>
         );
     }

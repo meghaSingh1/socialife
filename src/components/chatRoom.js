@@ -186,37 +186,39 @@ export default class ChatRoom extends Component {
         ))
 
         const body = !this.state.connectionEstablished ? <div style={{marginTop: '.5em'}}  className="ui active centered inline loader"></div> : (
-            <div className='chat-container row ui grid'>
-                <div className='four wide column chat-column-1'>
+            <div className='chat-container row'>
+                <div className='col-3 chat-column-1'>
                 <div className='chat-column-2-header row'><h3>Your Conversations</h3></div>
                 <div className="ui items chat-room-list">
                     {lastMessages}
                 </div>
                 </div>
-                <div className='one wide column'></div>
+                <div className='col-1 wide column'></div>
 
-                {this.state.messages == null ? <div className='eleven wide column chat-column-2 grid'>
-                    <div className='chat-column-2-header row'><h3>Messages</h3></div>
+                {this.state.messages == null ? <div className='col-8 chat-column-2'>
+                    <div className='chat-column-2-header'><h3>Messages</h3></div>
                     <div style={{marginTop: '.5em'}} className="ui active centered inline loader"></div></div> :
                 this.state.messages.length == 0 && this.props.match.params.uuid == undefined ? 
-                <div className='eleven wide column chat-column-2 grid'>
-                    <div className='chat-column-2-header row'><h3>Messages</h3></div>
+                <div className='col-8 chat-column-2'>
+                    <div className='chat-column-2-header'><h3>Messages</h3></div>
                     <div className="ui warning message">
                         <div className="header">You don't have any conversations!</div>
                         <p>Start making some friends!</p>
                     </div>
                 </div> :
-                <div className='eleven wide column chat-column-2'>
-                    <div className='chat-column-2-header row'><h3>Messages</h3></div>
-                    <div role="list" id='chat-message-section' className="ui very relaxed list chat-message-section row">
+                <div className='col-8 chat-column-2'>
+                    <div className='chat-column-2-header'><h3>Messages</h3></div>
+                    <div role="list" id='chat-message-section' className="ui very relaxed list chat-message-section">
                         {messageList}
                     </div>
-                    <div className='send-message-form-wrapper row'><form className='ui form grid send-message-form' onSubmit={this.sendChatMessage}>
-                            <div className="field fourteen wide column">
+                    <div className=''>
+                        <form className='ui form send-message-form row' onSubmit={this.sendChatMessage}>
+                            <div className="field col-11">
                                 <input className='ui input' value={this.state.message} onChange={e => this.setState({message: e.target.value})}/>
                             </div>
-                            <div className="field two wide column"><button className="ui icon button"><i aria-hidden="true" className="send icon"></i></button></div>
-                    </form></div>
+                            <div className="field col-1"><button className="ui icon button"><i aria-hidden="true" className="send icon"></i></button></div>
+                        </form>
+                    </div>
                 </div>}
             </div>
         );

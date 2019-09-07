@@ -26,38 +26,27 @@ export default class Sidebar extends Component {
         }
     }
 
-    showUnfollowButton = (i, show) => {
-        let button = document.getElementById("unfollow-" + i);
-        button.style.display = show ? "block" : "none";
-    }
 
-    render() {
-        let followings = []
-        for (let i = 0; i < (this.state.followings.length <= 3 ? this.state.followings.length : 3); i++)
-            followings.push(<div onMouseOver={() => this.showUnfollowButton(i, true)} onMouseOut={() => this.showUnfollowButton(i, false)} role="listitem" className="item">
-                <button id={"unfollow-" + i} className='ui red button unfollow-buttton'>Unfollow</button>
-                <img src={"http://127.0.0.1:8000" + this.state.followings[i].avatar[0].image} className="ui avatar image" />
-                <div className="content">
-                <div className="header">{this.state.followings[i].first_name + ' ' + this.state.followings[i].last_name}</div>
-                    {this.state.followings[i].followers.length} followers
-                </div>
-            </div>)
-        
+    render() {        
         return (
-            <div style={{position: this.state.sidebarPosition}} id="sidebar" className="ui custom-sidebar secondary vertical menu">
-                <Link to='/' id="home-item" className="item link-item">
-                    <i style={{float: 'left'}} aria-hidden="true" className="home icon"></i>Home</Link>
-                <Link to='/setting' id="setting-item" className="item link-item">
-                    <i style={{float: 'left'}} aria-hidden="true" className="setting icon"></i>Settings</Link>
-                <Link to={'/profile/' + localStorage.getItem('profile_name')} id="profile-item" className="item link-item">
-                    <i style={{float: 'left'}} aria-hidden="true" className="user icon"></i>Profile</Link>
-                    <div className="ui divider"></div>
-                <div role="list" className="ui list item">
-                    <div role="listitem" className="item people-following">
-                        <div className="header people-i-followed-header"><i style={{float: 'left'}} aria-hidden="true" className="users icon"></i>People I Follow</div>
-                    </div>
-                    {followings}
-                    <a className="see-all">See All<i aria-hidden="true" className="triangle right icon"></i></a>
+            <div id="sidebar" className="position-fixed">
+                <div className="ui custom-sidebar secondary vertical menu">
+                    <Link to='/' id="home-item" className="item link-item">
+                        <i style={{float: 'none'}} aria-hidden="true" className="home icon"></i>Home</Link>
+                    <Link to={'/profile/' + localStorage.getItem('profile_name')} id="profile-item" className="item link-item">
+                        <i style={{float: 'none'}} aria-hidden="true" className="user icon"></i>Profile</Link>
+                    <Link id="message-item" className="item link-item">
+                        <i style={{float: 'none'}} aria-hidden="true" className="mail icon"></i>Message</Link>
+                    <Link to='/notifications' id="notification-item" className="item link-item">
+                        <i style={{float: 'none'}} aria-hidden="true" className="bell icon"></i>Notifications</Link>
+                    <Link id="bookmark-item" className="item link-item">
+                        <i style={{float: 'none'}} aria-hidden="true" className="bookmark icon"></i>Bookmark</Link>
+                    <Link id="group-item" className="item link-item">
+                        <i style={{float: 'none'}} aria-hidden="true" className="group icon"></i>Groups</Link>
+                    <Link to='/setting' id="setting-item" className="item link-item">
+                        <i style={{float: 'none'}} aria-hidden="true" className="setting icon"></i>Settings</Link>
+                    <Link id="help-item" className="item link-item">
+                        <i style={{float: 'none'}} aria-hidden="true" className="help circle icon"></i>Help</Link>
                 </div>
             </div>
         );
