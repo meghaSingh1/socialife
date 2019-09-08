@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios'
-import logo from '../assets/images/logo.png';
+import logo from '../assets/images/logo3.png';
 
 export default class Login extends Component {
     constructor(props) {
@@ -82,7 +82,7 @@ export default class Login extends Component {
                     {errorMessage}
                     <div style={{textAlign:'center'}}>
                         <div className="ui horizontal divider">Or</div>
-                        <button onClick={() => this.props.history.push('/signup')} className="ui button login-form-buttons">
+                        <button onClick={() => this.props.history.push('/signup')} className="ui button login-form-buttons auth-second-button">
                             <i aria-hidden="true" className="signup icon"></i>Sign up
                         </button>
                     </div>

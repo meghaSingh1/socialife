@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios'
 import {Link} from 'react-router-dom'
-import logo from '../assets/images/logo.png'
+import logo from '../assets/images/logo4.png'
 
 var globalSocket = null;
 
@@ -169,7 +169,7 @@ export default class Navbar extends Component {
         return (
             this.state.requestUserIsAnonymous == null || this.state.requestUserIsAnonymous == true ?
             (<nav ref={ (divElement) => this.divElement = divElement} class="navbar navbar-expand-lg navbar-light bg-white sticky-top py-0 px-5 main-menu">
-            <Link class="navbar-brand" to="/"><img style={{width: '140px'}} src={logo} alt="Logo" /></Link>
+            <Link class="navbar-brand" to="/"><img style={{width: '150px'}} src={logo} alt="Logo" /></Link>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -183,7 +183,7 @@ export default class Navbar extends Component {
             </nav>) :
 
             (<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top py-0 px-5 main-menu">
-            <Link class="navbar-brand" to="/"><img style={{width: '140px'}} src={logo} alt="Logo" /></Link>
+            <Link class="navbar-brand" to="/"><img style={{width: '150px'}} src={logo} alt="Logo" /></Link>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -192,17 +192,17 @@ export default class Navbar extends Component {
                 <ul class="navbar-nav d-md-none">
                 <li class="nav-item">
                     <Link class="nav-link" onClick={this.goToChat}>
-                        <i aria-hidden="true" className="bell outline icon"></i>Message
+                        <i aria-hidden="true" className="bell outline icon link-icon"></i>Message
                     </Link>
                 </li>
                 <li class="nav-item">
                     <Link className="text-secondary nav-link" to={'/profile/' + localStorage.getItem('profile_name')}>
-                        <i aria-hidden="true" className="address book outline icon"></i>Profile
+                        <i aria-hidden="true" className="address book outline icon link-icon"></i>Profile
                     </Link>
                 </li>
                 <li class="nav-item">
                     <Link class="nav-link" onClick={this.handleLogout}>
-                        <i aria-hidden="true" className="sign-out icon"/>Logout
+                        <i aria-hidden="true" className="sign-out icon link-icon"/>Logout
                     </Link>
                 </li>
                 </ul>
@@ -243,7 +243,7 @@ export default class Navbar extends Component {
                 <div class="nav-item dropdown mx-2">
                 <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                     <button onClick={this.goToChat} className="ui button bg-white">
-                        <i aria-hidden="true" className="mail outline icon large"></i>
+                        <i aria-hidden="true" className="mail icon large link-icon"></i>
                         {this.state.newMessages === 0 ? '' : <span class="badge badge-pill badge-danger">{this.state.newMessages}</span>}
                     </button>
                 </a>
@@ -252,7 +252,7 @@ export default class Navbar extends Component {
                 <div class="nav-item dropdown mx-2">
                     <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                         <button onClick={this.readNotifications} className="ui button dropdown-item bg-white">
-                            <i aria-hidden="true" className="bell outline icon large"></i>
+                            <i aria-hidden="true" className="bell icon large link-icon"></i>
                             {this.state.newNotifications === 0 ? '' : (<span class="badge badge-pill badge-danger">{this.state.newNotifications}</span>)}
                         </button>
                     </a>
@@ -270,10 +270,10 @@ export default class Navbar extends Component {
                     <div class="dropdown-menu dropdown-menu-right py-0">
                     <h4 class="dropdown-header border-bottom text-center">Welcome, {localStorage.getItem('profile_name')}!</h4>
                     <Link to={'/profile/' + localStorage.getItem('profile_name')} className='dropdown-item'>
-                        <i aria-hidden="true" className="address book outline icon"></i>Profile
+                        <i aria-hidden="true" className="address book outline icon link-icon"></i>Profile
                     </Link>
                     <Link className='dropdown-item' onClick={this.handleLogout}>
-                        <i aria-hidden="true" className="sign-out icon"></i>Logout
+                        <i aria-hidden="true" className="sign-out icon link-icon"></i>Logout
                     </Link>
                     </div>
                 </div>

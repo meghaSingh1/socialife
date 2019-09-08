@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios'
 import {Link} from 'react-router-dom'
-import logo from '../assets/images/logo.png';
+import logo from '../assets/images/logo3.png';
 import ImageUploader from 'react-images-upload'
 
 export default class Login extends Component {
@@ -261,7 +261,7 @@ export default class Login extends Component {
                         {errorMessage}
                         <div style={{textAlign:'center'}}>
                             <div className="ui horizontal divider">Or</div>
-                            <button onClick={() => this.props.history.push('/login')} className="ui button login-form-buttons">
+                            <button onClick={() => this.props.history.push('/login')} className="ui button login-form-buttons auth-second-button">
                                 <i aria-hidden="true" className="sign-in icon"></i>Log in
                             </button>
                         </div>

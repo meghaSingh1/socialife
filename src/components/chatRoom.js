@@ -140,8 +140,7 @@ export default class ChatRoom extends Component {
     }
 
     goToRoom = (uuid) => {
-        // window.location.href = '/chat/' + uuid;
-        this.props.history.push('/chat/' + uuid);
+        this.props.history.push('/message/' + uuid);
     }
 
     render() {
