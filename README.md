@@ -1,6 +1,8 @@
 # socialife-frontend
-Socialife is a social media network built with ReactJS.&nbsp;
+Socialife is a social media network built with ReactJS.
+
 You can find the backend API built with Django here: https://github.com/16520511/LIFE
+
 UI Libraries: Bootstrap + Semantic UI
 
 Features
