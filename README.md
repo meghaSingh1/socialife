@@ -24,7 +24,6 @@ Pictures
 > Profile Page
 ![](https://github.com/16520511/socialife/blob/master/images/profile.png)
 
-
 > Following List
 ![](https://github.com/16520511/socialife/blob/master/images/following.png)
 
