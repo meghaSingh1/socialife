@@ -219,6 +219,39 @@ export default class PostList extends Component {
         newHashTags.splice(index, 1);
         this.setState({hashtags: newHashTags});
     }
+
+    handleBookmark = (postUUID) => {
+        //Call API
+        const email = localStorage.getItem('email');
+        const token = localStorage.getItem('token');
+
+        axios.post('/api/add_or_remove_bookmark',{email: email, post_uuid: postUUID, type: 'add'}, {headers: 
+        {'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': "Bearer " + token}})
+        .then(res => {
+            if (res.status === 200) {
+                console.log(res);
+            }
+        }).catch(err => {})
+    }
+
+    removeBookmark = (postUUID) => {
+        //Call API
+        const email = localStorage.getItem('email');
+        const token = localStorage.getItem('token');
+        axios.post('/api/add_or_remove_bookmark',{email: email, post_uuid: postUUID, type: 'remove'}, {headers: 
+        {'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': "Bearer " + token}})
+        .then(res => {
+            if (res.status === 200) {
+                let newPosts = this.state.posts;
+                for (let i = 0; i < newPosts.length; i++)
+                    if (newPosts[i].uuid === postUUID) {
+                        newPosts.splice(i, 1); break; }
+                this.setState({posts: newPosts})
+            }
+        }).catch(err => {})
+    }
   
     render() {
         const email = localStorage.getItem('email');
@@ -250,12 +283,16 @@ export default class PostList extends Component {
 
             const postDropdown = post.user.profile_name === localStorage.getItem('profile_name') ?
             (<div class="dropdown-menu dropdown-menu-right" aria-labelledby="notification-dropdown">
-                <a onClick={() => this.setState({postToDelete: post.uuid, openDeleteConfirm: true})} class="dropdown-item" href="#">Delete this post</a>
-                <a class="dropdown-item" href="#">Change post privacy</a>
+                {this.props.inBookmark !== true ? <div onClick={() => this.handleBookmark(post.uuid)} class="dropdown-item" href="#">Bookmark this post</div> : 
+            (<div onClick={() => this.removeBookmark(post.uuid)} class="dropdown-item" href="#">Remove from bookmark</div>)}
+                <div onClick={() => this.setState({postToDelete: post.uuid, openDeleteConfirm: true})} class="dropdown-item" href="#">Delete this post</div>
+                <div class="dropdown-item" href="#">Change post privacy</div>
             </div>) : (
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notification-dropdown">
-                <a class="dropdown-item" href="#">Hide this post</a>
-                <a class="dropdown-item" href="#">{"Stop showing post from " + post.user.first_name + " " + post.user.last_name}</a>
+                {this.props.inBookmark !== true ? <div onClick={() => this.handleBookmark(post.uuid)} class="dropdown-item" href="#">Bookmark this post</div> : 
+            (<div onClick={() => this.removeBookmark(post.uuid)} class="dropdown-item" href="#">Remove from bookmark</div>)}
+                <div class="dropdown-item" href="#">Hide this post</div>
+                <div class="dropdown-item" href="#">{"Stop showing post from " + post.user.first_name + " " + post.user.last_name}</div>
             </div>
             );
 
@@ -359,7 +396,7 @@ export default class PostList extends Component {
         const post_contents = this.state.posts == null ? (
             <div className=''>
                 {createNewPost}
-                <div className="ui active centered inline loader"></div>
+                <div className="ui active centered inline loader my-2"></div>
             </div>) :
             (<div className=''>
                 {createNewPost}

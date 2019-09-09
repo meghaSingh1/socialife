@@ -20,7 +20,7 @@ export default class Login extends Component {
         userData: null,
         canChat: false,
         pictures: [],
-        picData: '',
+        picData: null,
         aspect: 1/1,
         cropAvatarUploadActive: false,
         croppedAvatar: null,
@@ -101,11 +101,13 @@ export default class Login extends Component {
         .then(res => {
             if (res.status === 200)
             {
-                e.target.innerHTML = e.target.classList.contains('blue') ?  `Followed &nbsp;<i aria-hidden="true" className="check disabled icon"></i>` :
+                e.target.innerHTML = e.target.classList.contains('border') ?  `Followed &nbsp;<i className="check disabled icon"></i>` :
                 'Follow';
 
-                e.target.classList.contains('blue') ? e.target.classList.remove('blue') :
-                e.target.classList.add('blue');
+                if (e.target.classList.contains('border'))
+                    e.target.classList.remove('border');
+                else
+                    e.target.classList.add('border');
             }
         }).catch(err => {})
     }
@@ -130,7 +132,10 @@ export default class Login extends Component {
 
     onDrop = (pictureFiles, picData) => {
         console.log(pictureFiles)
-        this.setState({picData: picData, cropAvatarUploadActive: true})
+        if (pictureFiles.length > 0)
+            this.setState({picData: picData, cropAvatarUploadActive: true})
+        else 
+            this.setState({picData: null})
     }
 
     dataURItoBlob = (dataURI) => {
@@ -182,17 +187,33 @@ export default class Login extends Component {
             cropend={this._crop} />
         )
         const followButton = this.state.allowToPost ? '' :
-        this.state.isFollowing == undefined ? <button className="ui loading button follow-button">Loading</button> : this.state.isFollowing ? <button onClick={e => {e.persist(); this.handleFollow(e)}} className='ui button follow-button'>Followed&nbsp; <i aria-hidden="true" className="check disabled icon"></i></button> :
-        <button onClick={e => {e.persist(); this.handleFollow(e)}} className='ui blue button follow-button'>Follow</button>
+        this.state.isFollowing == undefined ? <button className="ui loading button follow-button">Loading</button> : this.state.isFollowing ? <button onClick={e => {e.persist(); this.handleFollow(e)}} className='ui blue button follow-button'>Followed&nbsp; <i aria-hidden="true" className="check disabled icon"></i></button> :
+        <button onClick={e => {e.persist(); this.handleFollow(e)}} className='ui border blue button follow-button'>Follow</button>
 
         const startChatButton = this.state.canChat ? (
-            <button className='ui red button' onClick={this.startChat}>Message</button>
+            <button className='ui red button' onClick={this.startChat}><i aria-hidden="true" className="chat icon"></i> Message</button>
         ) : '';
 
         const followers = this.state.user == null ? '' : this.state.user.followers == undefined ? '' : this.state.user.followers.length + (this.state.user.followers.length > 1 ? ' Followers' : ' Follower');
         const user_name = this.state.user == null ? '' : (this.state.user.first_name + ' ' + this.state.user.last_name);
         const avatar = this.state.user == null ? '' : ("http://127.0.0.1:8000" + (this.state.user.avatar.length > 0 ? this.state.user.avatar[0].image : ''));
-
+        const uploadAvatarButton = this.state.picData != null ? (<button className="ui blue button" onClick={this.handleUploadAvatar}>Upload</button>) : '';
+        const userInfo = this.state.user == null ? '' : (
+            <div role="list" className="ui list">
+                <div role="listitem" className="item">
+                    <i aria-hidden="true" className="marker icon"></i>
+                    <div className="content">New York, NY</div>
+                </div>
+                <div role="listitem" className="item">
+                    <i aria-hidden="true" className="mail icon"></i>
+                    <div className="content"><a href={"mailto:"+this.state.user.email}>{this.state.user.email}</a></div>
+                </div>
+                <div role="listitem" className="item">
+                    <i aria-hidden="true" className="linkify icon"></i>
+                    <div className="content"><a href="https://github.com/16520511">Website</a></div>
+                </div>
+            </div>
+        )
         return (
             <div className='background'>
                 <Navbar userData={this.state.userData} history={this.props.history}/>
@@ -211,25 +232,9 @@ export default class Login extends Component {
                                 {user_name}
                             </div>
                             <div className="meta"><span className="date">
-                            <div role="list" className="ui list">
-                        <div role="listitem" className="item">
-                            <i aria-hidden="true" className="users icon"></i>
-                            <div className="content">Semantic UI</div>
-                        </div>
-                        <div role="listitem" className="item">
-                            <i aria-hidden="true" className="marker icon"></i>
-                            <div className="content">New York, NY</div>
-                        </div>
-                        <div role="listitem" className="item">
-                            <i aria-hidden="true" className="mail icon"></i>
-                            <div className="content"><a href="mailto:jack@semantic-ui.com">jack@semantic-ui.com</a></div>
-                        </div>
-                        <div role="listitem" className="item">
-                            <i aria-hidden="true" className="linkify icon"></i>
-                            <div className="content"><a href="http://www.semantic-ui.com">semantic-ui.com</a></div>
-                        </div>
-                        </div></span></div>
-                            <div className="description">Matthew is a musician living in Nashville.</div>
+                            {userInfo}
+                            </span></div>
+                            <div className="description">I'm a fullstack web developer</div>
                         </div>
                         <div className="extra content">
                             <a><i aria-hidden="true" className="user icon"></i>{followers}</a>
@@ -246,7 +251,7 @@ export default class Login extends Component {
                                 imgExtension={['.jpg', '.gif', '.png', '.gif']}
                                 maxFileSize={1000000} withPreview={true}
                         />
-                        <button className="ui blue button" onClick={this.handleUploadAvatar}>Upload</button></div>}
+                        {uploadAvatarButton}</div>}
                     </div>
 
                     <div className="col-sm-12 col-lg-6 order-lg-5">

@@ -7,6 +7,7 @@ import Home from './components/home'
 import UserProfile from './components/userProfile'
 import ChatRoom from './components/chatRoom'
 import Notification from './components/notification'
+import Bookmark from './components/bookmark'
 import '../src/assets/css/bootstrap.min.css'
 
 import axios from 'axios'
@@ -22,6 +23,7 @@ function App() {
         <Route path="/profile/:profileName" component={UserProfile} />
         <Route path="/message/:uuid?" component={ChatRoom} />
         <Route path="/notifications" component={Notification} />
+        <Route path="/bookmark" component={Bookmark} />
     </Router>
   );
 }

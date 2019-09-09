@@ -39,7 +39,7 @@ export default class Sidebar extends Component {
                         <i style={{float: 'none'}} aria-hidden="true" className="mail icon"></i>Message</Link>
                     <Link to='/notifications' id="notification-item" className="item link-item">
                         <i style={{float: 'none'}} aria-hidden="true" className="bell icon"></i>Notifications</Link>
-                    <Link id="bookmark-item" className="item link-item">
+                    <Link to='/bookmark' id="bookmark-item" className="item link-item">
                         <i style={{float: 'none'}} aria-hidden="true" className="bookmark icon"></i>Bookmark</Link>
                     <Link id="group-item" className="item link-item">
                         <i style={{float: 'none'}} aria-hidden="true" className="group icon"></i>Groups</Link>

@@ -21,13 +21,15 @@ export default class RightContent extends Component {
         }).catch(err => {})
     }
 
-    componentDidUpdate(prevProps) {
+    async componentDidUpdate(prevProps) {
         if (prevProps !== this.props) {
-            this.setState({followings: this.props.followings});
+            await this.setState({followings: this.props.followings.slice(0,5)});
 
             let unfollowButtons = document.getElementsByClassName("unfollow-button");
-            for (let i = 0; i < unfollowButtons.length; i++)
+            for (let i = 0; i < unfollowButtons.length; i++){
+                console.log(unfollowButtons[i]);
                 unfollowButtons[i].style.display = "none";
+            }
         }
     }
 
@@ -46,18 +48,16 @@ export default class RightContent extends Component {
             </div>)
         })
 
-        let followings = []
-        for (let i = 0; i < (this.state.followings.length <= 3 ? this.state.followings.length : 3); i++)
-            followings.push(
-                <Link to='/' onMouseOver={() => this.showUnfollowButton(i, true)} onMouseOut={() => this.showUnfollowButton(i, false)} className="media list-group-item">
-                    <img className="notification-avatar rounded-circle mr-2" src={'http://127.0.0.1:8000' + this.state.followings[i].avatar[0].image}/>
-                    <div className="media-body">
-                    <h6 class="mt-0 mb-1">{this.state.followings[i].first_name + ' ' + this.state.followings[i].last_name}</h6>
-                        @{this.state.followings[i].profile_name}
-                    </div>
-                    <button id={"unfollow-" + i} className='ui red button unfollow-button'>Unfollow</button>
-                </Link>
-              )
+        let followings = this.state.followings.map((fl, index) => (
+            <Link to='/' onMouseOver={() => this.showUnfollowButton(index, true)} onMouseOut={() => this.showUnfollowButton(index, false)} className="media list-group-item">
+            <img className="notification-avatar rounded-circle mr-2" src={'http://127.0.0.1:8000' + fl.avatar[0].image}/>
+            <div className="media-body">
+            <h6 class="mt-0 mb-1">{fl.first_name + ' ' + fl.last_name}</h6>
+                @{fl.profile_name}
+            </div>
+            <button id={"unfollow-" + index} className='ui red button unfollow-button'>Unfollow</button>
+        </Link>
+        ))
 
         return (
             <div id="trending-hashtags" className="position-fixed">
@@ -78,17 +78,22 @@ export default class RightContent extends Component {
                     <div class="card-header">People I Follow</div>
                     <ul class="card-body p-0 list-group text-dark">
                     {followings}
+                    <div className="media list-group-item border-top text-center">
+                        <div className="media-body see-more">
+                            See More
+                        </div>
+                    </div>
                     </ul>
                 </div>
 
                 <div className="web-info">
-                    <div className="ui grid container">
-                        <a class="three wide column">Terms</a>
-                        <a class="five wide column">Privacy policy</a>
-                        <a class="three wide column">Cookies</a>
-                        <a class="three wide column">Ads info</a>
-                        <a class="sixteen wide column">© 2019 SOCIALIFE, Huy Lê</a>
-                    </div>
+                    {/* <div className="ui grid container"> */}
+                        <a>Terms -</a>&nbsp;
+                        <a>Privacy policy -</a>&nbsp;
+                        <a>Cookies -</a>&nbsp;
+                        <a>About -</a>&nbsp;
+                        <a>© 2019 SOCIALIFE, Huy Lê</a>
+                    {/* </div> */}
                 </div>
             </div>
         );

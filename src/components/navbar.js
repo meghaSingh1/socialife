@@ -185,23 +185,23 @@ export default class Navbar extends Component {
             (<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top py-0 px-5 main-menu">
             <Link class="navbar-brand" to="/"><img style={{width: '150px'}} src={logo} alt="Logo" /></Link>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
+              <i className="list icon" />
             </button>
           
             <div class="collapse navbar-collapse d-md-none" id="navbarSupportedContent">
                 <ul class="navbar-nav d-md-none">
                 <li class="nav-item">
-                    <Link class="nav-link" onClick={this.goToChat}>
+                    <Link class="nav-link text-white" onClick={this.goToChat}>
                         <i aria-hidden="true" className="bell outline icon link-icon"></i>Message
                     </Link>
                 </li>
                 <li class="nav-item">
-                    <Link className="text-secondary nav-link" to={'/profile/' + localStorage.getItem('profile_name')}>
+                    <Link className="nav-link text-white" to={'/profile/' + localStorage.getItem('profile_name')}>
                         <i aria-hidden="true" className="address book outline icon link-icon"></i>Profile
                     </Link>
                 </li>
                 <li class="nav-item">
-                    <Link class="nav-link" onClick={this.handleLogout}>
+                    <Link class="nav-link text-white" onClick={this.handleLogout}>
                         <i aria-hidden="true" className="sign-out icon link-icon"/>Logout
                     </Link>
                 </li>
@@ -215,7 +215,7 @@ export default class Navbar extends Component {
                 <div className="ui icon input mx-2 px-5">
                 <div className="ui search">
                     <div style={{padding: ".78em 0"}} className="ui icon input">
-                    <input value={this.state.searchQuery} className='prompt' onBlur={this.searchBarFocusOut} onChange={this.searchAutocomplete} style={{minWidth: '280px'}} type="text" placeholder="Search..." />
+                    <input value={this.state.searchQuery} className='prompt' onBlur={this.searchBarFocusOut} onChange={this.searchAutocomplete} style={{minWidth: '20em'}} type="text" placeholder="Search..." />
                         <i aria-hidden="true" className="search icon"></i>
                     </div>
                     <div onMouseOver={() => this.setState({searchResultHover: true})} 
@@ -242,7 +242,7 @@ export default class Navbar extends Component {
 
                 <div class="nav-item dropdown mx-2">
                 <a class="nav-link" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                    <button onClick={this.goToChat} className="ui button bg-white">
+                    <button onClick={this.goToChat} className="ui button navbar-link-button bg-white">
                         <i aria-hidden="true" className="mail icon large link-icon"></i>
                         {this.state.newMessages === 0 ? '' : <span class="badge badge-pill badge-danger">{this.state.newMessages}</span>}
                     </button>
@@ -251,7 +251,7 @@ export default class Navbar extends Component {
 
                 <div class="nav-item dropdown mx-2">
                     <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                        <button onClick={this.readNotifications} className="ui button dropdown-item bg-white">
+                        <button onClick={this.readNotifications} className="ui button navbar-link-button dropdown-item bg-white">
                             <i aria-hidden="true" className="bell icon large link-icon"></i>
                             {this.state.newNotifications === 0 ? '' : (<span class="badge badge-pill badge-danger">{this.state.newNotifications}</span>)}
                         </button>
