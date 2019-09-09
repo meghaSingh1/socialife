@@ -15,36 +15,37 @@ Features
 
 Pictures
 -------------
-![](https://github.com/16520511/socialife/blob/master/images/login.png)
 > Login Page
+![](https://github.com/16520511/socialife/blob/master/images/login.png)
 ------
-![](https://github.com/16520511/socialife/blob/master/images/home.png)
 > Home Page
+![](https://github.com/16520511/socialife/blob/master/images/home.png)
 ------
-![](https://github.com/16520511/socialife/blob/master/images/profile.png)
 > Profile Page
+![](https://github.com/16520511/socialife/blob/master/images/profile.png)
+
 ------
-![](https://github.com/16520511/socialife/blob/master/images/following.png)
 > Following List
+![](https://github.com/16520511/socialife/blob/master/images/following.png)
 ------
-![](https://github.com/16520511/socialife/blob/master/images/feed.png)
 > Post Feed
+![](https://github.com/16520511/socialife/blob/master/images/feed.png)
 ------
-![](https://github.com/16520511/socialife/blob/master/images/posting.png)
 > Creating a post
+![](https://github.com/16520511/socialife/blob/master/images/posting.png)
 ------
-![](https://github.com/16520511/socialife/blob/master/images/carousel.png)
 > View post image in carousel
+![](https://github.com/16520511/socialife/blob/master/images/carousel.png)
 ------
-![](https://github.com/16520511/socialife/blob/master/images/bookmark.png)
 > Bookmark List
+![](https://github.com/16520511/socialife/blob/master/images/bookmark.png)
 ------
-![](https://github.com/16520511/socialife/blob/master/images/navigation-bar.png)
 > Navbar
+![](https://github.com/16520511/socialife/blob/master/images/navigation-bar.png)
 ------
-![](https://github.com/16520511/socialife/blob/master/images/search.png)
 > Search
+![](https://github.com/16520511/socialife/blob/master/images/search.png)
 ------
-![](https://github.com/16520511/socialife/blob/master/images/message.png)
 > Messaging
+![](https://github.com/16520511/socialife/blob/master/images/message.png)
 ------
