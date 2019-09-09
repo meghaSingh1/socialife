@@ -39,8 +39,10 @@ Pictures
 > Bookmark List
 ![](https://github.com/16520511/socialife/blob/master/images/bookmark.png)
 
+
 > Navbar
 ![](https://github.com/16520511/socialife/blob/master/images/navigation-bar.png)
+
 
 > Search
 ![](https://github.com/16520511/socialife/blob/master/images/search.png)
